@@ -22,4 +22,4 @@ This is a retrospective scoring of the public record. It does not certify any la
 
 ## Author
 
-Solo Track 1 submission. Fill name and affiliation on the official template.
+Juan Pablo Hidalgo Garcia
