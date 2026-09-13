@@ -1,0 +1,39 @@
+{
+  "generated_at": "2026-09-12T21:26:09.747187+00:00",
+  "policy": "v0.1-eval-egress",
+  "destination_classes": [
+    "other-public",
+    "package-index",
+    "package-index",
+    "public-platform"
+  ],
+  "destinations_redacted": [
+    "other-public",
+    "public-platform",
+    "package-index",
+    "package-index"
+  ],
+  "runs": [
+    {
+      "name": "july-chain",
+      "stopped_at": 2,
+      "stop_control": "A1",
+      "pages": []
+    },
+    {
+      "name": "recon-burst",
+      "stopped_at": 9,
+      "stop_control": "A5",
+      "pages": [
+        "C6"
+      ]
+    },
+    {
+      "name": "harness-mode",
+      "stopped_at": 5,
+      "stop_control": "B3",
+      "pages": []
+    }
+  ],
+  "sha256": "6638146e99619cd3c44271e03ca38531c68eec65ad61f7ad485a9dcdb26e96ab"
+}

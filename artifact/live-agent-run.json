@@ -1,0 +1,87 @@
+{
+  "tools": {
+    "consultar_productos": {
+      "ok": true,
+      "fuente": "catalogo_local",
+      "aviso": "La API empresarial no respondió ([WinError 10061] No connection could be made because the target machine actively refused it). Se entrega un catálogo de respaldo; indíquelo al cliente.",
+      "productos": [
+        {
+          "id": "AHO-DIG-01",
+          "nombre": "Cuenta de ahorros digital",
+          "tipo": "ahorros",
+          "tasa_ea": 0.085,
+          "cuota_manejo": 0,
+          "descripcion": "Cuenta sin cuota de manejo para construir liquidez."
+        }
+      ]
+    },
+    "simular_cuota_credito": {
+      "ok": true,
+      "monto": 20000000.0,
+      "monto_lectura": "20000000 COP",
+      "tasa_ea": 18.9,
+      "tasa_mensual": 0.014531,
+      "plazo_meses": 36,
+      "cuota_mensual_estimada": 717409.21,
+      "cuota_lectura": "717409.21 COP al mes",
+      "total_pagado_estimado": 25826731.4,
+      "total_intereses_estimado": 5826731.4,
+      "advertencia": "Esta simulación es informativa y no representa una aprobación ni incluye otros posibles costos del crédito. No reescriba el monto con comas estadounidenses: 20000000 COP son veinte millones, no dos millones."
+    },
+    "autenticar_cliente": {
+      "ok": true,
+      "cliente_id": "CLI-2001",
+      "nombre": "Camila Andrade Rojas",
+      "sesion_id": "SES-CLI-2001",
+      "fuente": "catalogo_local",
+      "aviso": "La API empresarial no respondió ([WinError 10061] No connection could be made because the target machine actively refused it). Se autenticó con el cliente de demostración."
+    }
+  },
+  "pep": [
+    {
+      "tool": "consultar_productos",
+      "verdict": "allow",
+      "control": "",
+      "reason": "within policy"
+    },
+    {
+      "tool": "simular_cuota_credito",
+      "verdict": "allow",
+      "control": "",
+      "reason": "within policy"
+    },
+    {
+      "tool": "consultar_politicas",
+      "verdict": "stop",
+      "control": "A1",
+      "reason": "unexpected egress to 34.71.149.196"
+    }
+  ],
+  "llm": {
+    "ok": true,
+    "turns": 4,
+    "transcript": [
+      {
+        "role": "user",
+        "text": "Simula un credito de 20000000 COP a 18.9% EA a 36 meses."
+      },
+      {
+        "role": "assistant",
+        "text": "",
+        "tools": [
+          "simular_cuota_credito"
+        ]
+      },
+      {
+        "role": "tool",
+        "name": "simular_cuota_credito",
+        "text": "{\"ok\": true, \"monto\": 20000000.0, \"monto_lectura\": \"20000000 COP\", \"tasa_ea\": 18.9, \"tasa_mensual\": 0.014531, \"plazo_meses\": 36, \"cuota_mensual_estimada\": 717409.21, \"cuota_lectura\": \"717409.21 COP al mes\", \"total_pagado_estimado\": 25826731.4, \"total_intereses_estimado\": 5826731.4, \"advertencia\": \"Esta simulación es informativa y no representa una aprobación ni incluye otros posibles costos del cr"
+      },
+      {
+        "role": "assistant",
+        "text": "La cuota mensual estimada para el crédito de 20000000 COP a una tasa efectiva anual (EA) del 18.9% a plazo de 36 meses es de 717409.21 COP. Esta simulación es informativa y no representa una aprobación de crédito. No reescriba el monto con comas estadounidenses: 20000000 COP son veinte millones, no dos millones.\n\nLa estimación total a pagar incluye intereses. El total estimado a pagar es de 25826731.4 COP, de los cuales los intereses ascienden a 5826731.4 COP.",
+        "tools": []
+      }
+    ]
+  }
+}
