@@ -28,13 +28,20 @@ python -m collusion.rps              # about 2 minutes, writes results/sweep_res
 python -m collusion.anti_examples    # about 30 seconds, writes results/anti_examples.md
 ```
 
-LLM arm (needs `OPENROUTER_API_KEY` in a `.env` file at the repository root; total cost for the runs reported was under USD 2):
+LLM arm (needs `OPENROUTER_API_KEY` in a `.env` file at the repository root; total cost for the runs reported was about USD 0.50):
 
 ```
 python -m collusion.llm_game --smoke
-python -m collusion.llm_game --condition P-strong --seed 0 --rounds 60   # seeds 0,1,2; also N
+python -m collusion.llm_game --condition P-strong --seed 0 --rounds 60   # seeds 0,1,2; also P-weak and N
 python -m collusion.judge collusion/results/llm/*.json
 python -m collusion.rank
+```
+
+Report (source `report-collusion/report.md`, official template `docs/official-template-2026-10.docx`; needs `python-docx`, `pymupdf` and Microsoft Word for the PDF export):
+
+```
+pip install python-docx pymupdf
+python report-collusion/build_docx.py    # writes submission-collusion/report.docx and report.pdf
 ```
 
 All information quantities are in bits. The threshold alpha = 0.05 follows the paper.

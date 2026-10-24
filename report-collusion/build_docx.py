@@ -93,6 +93,13 @@ def set_table_borders(table) -> None:
     from docx.oxml.ns import qn
 
     tbl_pr = table._tbl.tblPr
+    margins = OxmlElement("w:tblCellMar")
+    for edge, width in (("top", "20"), ("bottom", "20"), ("left", "60"), ("right", "60")):
+        el = OxmlElement(f"w:{edge}")
+        el.set(qn("w:w"), width)
+        el.set(qn("w:type"), "dxa")
+        margins.append(el)
+    tbl_pr.append(margins)
     borders = OxmlElement("w:tblBorders")
     for edge in ("top", "left", "bottom", "right", "insideH", "insideV"):
         el = OxmlElement(f"w:{edge}")
@@ -114,6 +121,9 @@ def add_table(doc: Document, rows: list[list[str]]) -> None:
             text = row[j] if j < len(row) else ""
             text = text.replace("\\", "")
             p = cell.paragraphs[0]
+            p.paragraph_format.space_before = Pt(0)
+            p.paragraph_format.space_after = Pt(0)
+            p.paragraph_format.line_spacing = 1.0
             add_inline(p, text, size=8.5)
             if i == 0:
                 for run in p.runs:
@@ -134,10 +144,34 @@ def build() -> None:
 
     title_cell = doc.tables[0].rows[0].cells[0]
     set_cell_paragraph(title_cell.paragraphs[1], title, bold=True)
-    set_cell_paragraph(title_cell.paragraphs[2], author)
-    title_cell.paragraphs[2].alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+    # Row 1 of the title table holds a nested author grid and a nested abstract box.
     abstract_cell = doc.tables[0].rows[1].cells[0]
-    set_cell_paragraph(abstract_cell.paragraphs[2], abstract)
+    author_grid = abstract_cell.tables[0].cell(0, 0).tables[0]
+    name, _, affiliation = author.partition(", ")
+    affiliation = affiliation.split(". ")[0]
+    author_cells = [c for row in author_grid.rows for c in row.cells]
+    # Merge the six author slots into one full-width cell (solo submission).
+    merged = author_cells[0].merge(author_cells[-1])
+    for p in merged.paragraphs[1:]:
+        p._p.getparent().remove(p._p)
+    author_cells = [merged]
+    for k, cell in enumerate(author_cells):
+        paras = cell.paragraphs
+        for p in paras:
+            set_cell_paragraph(p, "")
+        if k == 0:
+            run = paras[0].runs[0] if paras[0].runs else paras[0].add_run("")
+            run.text = name
+            run.add_break()
+            paras[0].add_run(affiliation)
+    abstract_box = abstract_cell.tables[1].cell(0, 0)
+    set_cell_paragraph(abstract_box.paragraphs[0], abstract)
+    for run in abstract_box.paragraphs[0].runs:
+        run.italic = False
+        run.underline = False
+    for p in abstract_box.paragraphs[1:]:
+        set_cell_paragraph(p, "")
 
     clear_body_after_tables(doc)
 
@@ -161,7 +195,7 @@ def build() -> None:
         elif line.startswith("!["):
             m = re.search(r"\]\(([^)]+)\)", line)
             path = (SRC.parent / m.group(1)).resolve()
-            doc.add_picture(str(path), width=Inches(5.2))
+            doc.add_picture(str(path), width=Inches(4.0))
             doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
         elif line.startswith("> "):
             p = doc.add_paragraph()
@@ -173,6 +207,7 @@ def build() -> None:
             p.paragraph_format.left_indent = Inches(0.25)
         else:
             p = doc.add_paragraph()
+            p.paragraph_format.space_after = Pt(3)
             add_inline(p, line)
     if table_buf:
         add_table(doc, parse_table(table_buf))
@@ -186,7 +221,9 @@ def export_pdf() -> None:
     ps = (
         "$w = New-Object -ComObject Word.Application; $w.Visible = $false; "
         f"$d = $w.Documents.Open('{OUT_DOCX}'); $d.ExportAsFixedFormat('{OUT_PDF}', 17); "
-        "$pages = $d.ComputeStatistics(2); $d.Close(0); $w.Quit(); Write-Output \"pages=$pages\""
+        "$pages = $d.ComputeStatistics(2); "
+        "$refpage = -1; foreach ($p in $d.Paragraphs) { if ($p.Range.Text.Trim() -eq 'References') { $refpage = $p.Range.Information(3); break } }; "
+        "$d.Close(0); $w.Quit(); Write-Output \"pages=$pages references_start_page=$refpage\""
     )
     out = subprocess.run(["powershell", "-NoProfile", "-Command", ps], capture_output=True, text=True)
     print(out.stdout.strip(), out.stderr.strip())
