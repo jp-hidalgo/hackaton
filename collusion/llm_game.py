@@ -105,8 +105,20 @@ def system_prompt(name: str, condition: str, rounds: int, schedule: list[int],
     return base
 
 
+def request_extras(model: str) -> dict:
+    """Per-model request options. Gemini 2.5 thinks by default; turn it off so
+    the reply is the bare JSON move and the cost stays comparable."""
+    if "gemini" in model:
+        return {"reasoning": {"enabled": False}}
+    return {}
+
+
 def play(condition: str, seed: int, rounds: int, model: str = MODEL,
-         out_dir: Path = RESULTS) -> dict:
+         out_dir: Path = RESULTS, temperature: float = TEMPERATURE,
+         models: dict[str, str] | None = None) -> dict:
+    """Round 1 (frozen) used the defaults. Round 2 (amendment of 24 Oct, 17:45)
+    adds temperature, per-agent models and a separate output directory."""
+    models = models or {n: model for n in NAMES}
     rng = np.random.default_rng(1000 + seed)
     schedule = rng.integers(0, 3, size=rounds).tolist()
     help_rounds = sorted(rng.choice(rounds, size=rounds // 2, replace=False).tolist())
@@ -117,9 +129,9 @@ def play(condition: str, seed: int, rounds: int, model: str = MODEL,
     scores = np.zeros(4, dtype=int)
     log = {
         "condition": condition, "seed": seed, "rounds": rounds, "model": model,
-        "temperature": TEMPERATURE, "schedule": schedule, "help_rounds": help_rounds,
-        "system_prompts": systems, "rounds_log": [], "usage": {"prompt": 0, "completion": 0},
-        "invalid_replies": 0,
+        "models": models, "temperature": temperature, "schedule": schedule,
+        "help_rounds": help_rounds, "system_prompts": systems, "rounds_log": [],
+        "usage": {"prompt": 0, "completion": 0}, "invalid_replies": 0,
     }
     for t in range(rounds):
         history = "\n".join(
@@ -136,9 +148,10 @@ def play(condition: str, seed: int, rounds: int, model: str = MODEL,
             for attempt in range(2):
                 try:
                     resp = client.chat.completions.create(
-                        model=model, temperature=TEMPERATURE, max_tokens=20,
+                        model=models[name], temperature=temperature, max_tokens=20,
                         messages=[{"role": "system", "content": systems[name]},
                                   {"role": "user", "content": user}],
+                        extra_body=request_extras(models[name]),
                     )
                 except Exception as exc:  # network / rate limit: wait and retry once
                     raw = f"ERROR {exc}"
@@ -189,12 +202,20 @@ def main() -> None:
     ap.add_argument("--condition", choices=["P-strong", "P-weak", "N"], default="P-strong")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--rounds", type=int, default=60)
+    ap.add_argument("--temperature", type=float, default=TEMPERATURE)
+    ap.add_argument("--model", default=MODEL)
+    ap.add_argument("--model-cd", default=None, help="model for players C and D (mixed game)")
+    ap.add_argument("--out", default=None, help="output directory relative to results/ (default llm)")
     ap.add_argument("--smoke", action="store_true")
     args = ap.parse_args()
+    models = {n: (args.model_cd if args.model_cd and n in ("C", "D") else args.model) for n in NAMES}
+    out = RESULTS if args.out is None else RESULTS.parent / args.out
     if args.smoke:
-        play("P-strong", 99, 5, out_dir=RESULTS / "smoke")
+        play("P-strong", 99, 5, out_dir=RESULTS / "smoke", model=args.model,
+             temperature=args.temperature, models=models)
     else:
-        play(args.condition, args.seed, args.rounds)
+        play(args.condition, args.seed, args.rounds, model=args.model, out_dir=out,
+             temperature=args.temperature, models=models)
 
 
 if __name__ == "__main__":
