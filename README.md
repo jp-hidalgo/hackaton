@@ -1,3 +1,11 @@
+# October 2026: pairwise net influence on LLM agents (collusion sprint, question 1.4)
+
+Current project, on branch `sprint/q1.4-net-influence`: [collusion/README.md](collusion/README.md). All code under `collusion/` and `tests/test_netinfluence.py` was written during the AI Collusion Research Sprint (23-25 October 2026). The report draft is [report-collusion/report.md](report-collusion/report.md).
+
+Everything below this line is preexisting work from a different sprint in September 2026 and is not part of the October submission.
+
+---
+
 # Three-zone containment matrix (Track 1)
 
 Weekend artifact for the Apart Research / CeSIA AI Incident Response Sprint (11–13 September 2026).
