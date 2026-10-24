@@ -62,4 +62,4 @@ It claims that the statistic can name the pair in a toy game, including when the
 
 ## Amendments
 
-(none)
+- Sat 24 Oct 2026, 17:10 Central. After the first constant-state sweep, the three-player replication detected faster than Bonjour et al. Table 2 (e.g. CP 0.3 at 200 games: 93% here versus 48.3% there). Two post-hoc sensitivity analyses were added and are labelled exploratory everywhere they appear: (a) threshold expressed in nats instead of bits (alpha = 0.0721 bits), which did not close the gap; (b) conditioning on the previous round's joint action (27 states for three players), which reproduces Table 2 within a few points and also reveals a false-positive rate at CP = 0 of about 50% at 50 games under that state definition. The constant-state analysis remains the pre-registered primary analysis. Also added to the sweep: the CP = 0 false-positive rate for the three-player case and a permutation-threshold comparison on a subset of cells (100 reps, 300 permutations, for run time).

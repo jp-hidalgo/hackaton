@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-12T21:26:09.747187+00:00",
+  "generated_at": "2026-09-13T15:59:26.805463+00:00",
   "policy": "v0.1-eval-egress",
   "destination_classes": [
     "other-public",
@@ -35,5 +35,5 @@
       "pages": []
     }
   ],
-  "sha256": "6638146e99619cd3c44271e03ca38531c68eec65ad61f7ad485a9dcdb26e96ab"
+  "sha256": "56c632437b0303997019e5211980fbccd60313aceae1e1590b6a23962b7b6f14"
 }
