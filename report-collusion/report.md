@@ -157,7 +157,7 @@ Pairwise net influence fits in a page of code and, with a permutation threshold,
 
 ## Code and Data
 
-Code repository: REPO_URL, branch `sprint/q1.4-net-influence`, directory `collusion/` (results and transcripts in `results/`, pre-registration in `PREREGISTRATION.md`). The directories `harness/`, `artifact/`, `report/` and `submission/` are preexisting September 2026 work on a different topic.
+Code repository: https://github.com/jp-hidalgo/hackaton, branch `sprint/q1.4-net-influence`, directory `collusion/` (results and transcripts in `results/`, pre-registration in `PREREGISTRATION.md`). The directories `harness/`, `artifact/`, `report/` and `submission/` are preexisting September 2026 work on a different topic.
 
 ## References
 
