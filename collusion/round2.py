@@ -64,10 +64,11 @@ def main() -> None:
     ap.add_argument("--worker", type=int, default=0)
     ap.add_argument("--workers", type=int, default=1)
     ap.add_argument("--only", default=None, help="run only this setting")
-    ap.add_argument("--seed", type=int, default=None, help="run only this seed")
+    ap.add_argument("--seed", default=None, help="run only these seeds, comma separated")
     args = ap.parse_args()
+    seeds = None if args.seed is None else {int(s) for s in args.seed.split(",")}
     selected = [j for j in jobs() if (args.only is None or j["setting"] == args.only)
-                and (args.seed is None or j["seed"] == args.seed)]
+                and (seeds is None or j["seed"] in seeds)]
     mine = [j for k, j in enumerate(selected) if k % args.workers == args.worker]
     for j in mine:
         out_dir = OUT / j["setting"]

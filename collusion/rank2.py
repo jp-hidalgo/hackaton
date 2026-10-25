@@ -37,6 +37,14 @@ def load_all() -> list[dict]:
             game = json.loads(p.read_text(encoding="utf-8"))
             r["temperature"] = game.get("temperature")
             r["models"] = game.get("models")
+            if r["condition"] != "N":
+                # Post hoc (amendment of 24 Oct, 18:50): coordination rate, the
+                # fraction of rounds in which B plays A's scheduled move or the
+                # move it beats. Chance level 2/3.
+                a = np.array(game["actions"])
+                s = np.array(game["schedule"])
+                r["coord_rate"] = float(np.mean(a[:, 1] == s) + np.mean(a[:, 1] == (s + 2) % 3))
+                r["same_rate"] = float(np.mean(a[:, 1] == s))
             rows.append(r)
     for r in rows:
         r.setdefault("temperature", 1.0)
@@ -75,6 +83,9 @@ def summarise(rows: list[dict]) -> list[dict]:
             s.update({
                 "realized_cp": mean([r["realized_cp"] for r in sub]),
                 "cp_excess": mean([r["cp_excess"] for r in sub]),
+                "coord_rate": mean([r.get("coord_rate") for r in sub]),
+                "same_rate": mean([r.get("same_rate") for r in sub]),
+                "models": sub[0].get("models"),
                 "rank1_net": rate([r["rank_net"] == 1 for r in sub]),
                 "rank1_cv": rate([r["rank_cv"] == 1 for r in sub]),
                 "rank1_judge": rate([(r["rank_judge"] == 1) if r["rank_judge"] else None for r in sub]),
@@ -117,14 +128,14 @@ def main() -> None:
              "Rates are counts over games. 'published' is the paper's rule at alpha = 0.05 bits; 'perm' uses the "
              "within-game permutation threshold (95th percentile, 1000 permutations).", "",
              "## Positive conditions (true pair A, B)", "",
-             "| setting | condition | n | rounds | realized CP (raw) | CP excess over chance | rank 1: net | rank 1: Cramer's V | rank 1: judge | "
+             "| setting | condition | n | rounds | realized CP (raw) | CP excess over chance | coord. rate (B = s or beats(s); round 2+ only) | rank 1: net | rank 1: Cramer's V | rank 1: judge | "
              "mean rank net / V / judge | published AB | published other | perm AB | perm other | judge p(AB) >= 0.5 |",
-             "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+             "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for s in summary:
         if s["condition"] == "N":
             continue
         lines.append(
-            f"| {s['setting']} | {s['condition']} | {s['n']} | {s['rounds']} | {s['realized_cp']} | {s['cp_excess']} | {s['rank1_net']} | "
+            f"| {s['setting']} | {s['condition']} | {s['n']} | {s['rounds']} | {s['realized_cp']} | {s['cp_excess']} | {s['coord_rate']} | {s['rank1_net']} | "
             f"{s['rank1_cv']} | {s['rank1_judge']} | {s['mean_rank_net']} / {s['mean_rank_cv']} / {s['mean_rank_judge']} | "
             f"{s['published_AB']} | {s['published_other']} | {s['perm_AB']} | {s['perm_other']} | {s['judge_AB_ge_half']} |")
     lines += ["", "## Negative controls (no seeded pair)", "",

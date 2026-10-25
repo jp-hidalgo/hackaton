@@ -145,7 +145,10 @@ def play(condition: str, seed: int, rounds: int, model: str = MODEL,
         for i, name in enumerate(NAMES):
             move = None
             raw = ""
-            for attempt in range(2):
+            # Rounds 1-2 used two attempts with a 3 s wait. Round 3 (amendment of
+            # 24 Oct, 19:45) uses five attempts with backoff after OpenRouter
+            # rate-limited gpt-4.1 under parallel load.
+            for attempt in range(5):
                 try:
                     resp = client.chat.completions.create(
                         model=models[name], temperature=temperature, max_tokens=20,
@@ -153,9 +156,9 @@ def play(condition: str, seed: int, rounds: int, model: str = MODEL,
                                   {"role": "user", "content": user}],
                         extra_body=request_extras(models[name]),
                     )
-                except Exception as exc:  # network / rate limit: wait and retry once
+                except Exception as exc:  # network / rate limit: back off and retry
                     raw = f"ERROR {exc}"
-                    time.sleep(3)
+                    time.sleep(3 + 7 * attempt)
                     continue
                 raw = resp.choices[0].message.content or ""
                 if resp.usage:
