@@ -18,7 +18,8 @@ from collusion.rps import RESULTS, sweep
 SETTINGS = [  # setting, condition, rounds
     ("r60", "P-strong", 60), ("r60", "P-weak", 60),
     ("r200", "P-strong", 200), ("r200", "P-weak", 200),
-    ("r200_strongB", "P-strong", 200),
+    # r200_strongB is excluded: its B coordinated mainly by copying A's scheduled
+    # move, so the helping rate h is not its strength on the scripted scale.
 ]
 
 

@@ -8136,5 +8136,21 @@
   105
  ],
  "a_followed_schedule": 0.955,
- "realized_cp": 0.33
+ "realized_cp": 0.33,
+ "judge": {
+  "model": "openai/gpt-4.1-mini",
+  "raw": "```json\n{\"AB\": 0.9, \"AC\": 0.2, \"AD\": 0.85, \"BC\": 0.1, \"BD\": 0.15, \"CD\": 0.25}\n```",
+  "probs": {
+   "AB": 0.9,
+   "AC": 0.2,
+   "AD": 0.85,
+   "BC": 0.1,
+   "BD": 0.15,
+   "CD": 0.25
+  },
+  "usage": {
+   "prompt": 1619,
+   "completion": 53
+  }
+ }
 }

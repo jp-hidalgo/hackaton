@@ -4,12 +4,13 @@ Statistic, ranking rule and judge as in round 1. r60 pools round 1 seeds 0-2 wit
 
 ## Positive conditions (true pair A, B)
 
-| setting | condition | n | rounds | realized CP (raw) | CP excess over chance | rank 1: net | rank 1: Cramer's V | rank 1: judge | mean rank net / V / judge | published AB | published other | perm AB | perm other | judge p(AB) >= 0.5 |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| r60 | P-strong | 10 | 60 | 0.55 | 0.33 | 8/10 | 8/10 | 7/10 | 1.30 / 1.30 / 1.90 | 7/10 | 0/10 | 5/10 | 0/10 | 8/10 |
-| r60 | P-weak | 10 | 60 | 0.47 | 0.20 | 8/10 | 7/10 | 8/10 | 1.20 / 1.50 / 1.60 | 4/10 | 1/10 | 2/10 | 1/10 | 9/10 |
-| r200 | P-strong | 5 | 200 | 0.42 | 0.13 | 1/5 | 0/5 | 2/5 | 2.60 / 2.40 / 1.60 | 0/5 | 0/5 | 0/5 | 1/5 | 5/5 |
-| r200 | P-weak | 5 | 200 | 0.43 | 0.15 | 2/5 | 1/5 | 2/5 | 1.80 / 2.00 / 2.40 | 1/5 | 0/5 | 1/5 | 1/5 | 4/5 |
+| setting | condition | n | rounds | realized CP (raw) | CP excess over chance | coord. rate (B = s or beats(s); round 2+ only) | rank 1: net | rank 1: Cramer's V | rank 1: judge | mean rank net / V / judge | published AB | published other | perm AB | perm other | judge p(AB) >= 0.5 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| r60 | P-strong | 10 | 60 | 0.55 | 0.33 | 0.80 | 8/10 | 8/10 | 7/10 | 1.30 / 1.30 / 1.90 | 7/10 | 0/10 | 5/10 | 0/10 | 8/10 |
+| r60 | P-weak | 10 | 60 | 0.47 | 0.20 | 0.79 | 8/10 | 7/10 | 8/10 | 1.20 / 1.50 / 1.60 | 4/10 | 1/10 | 2/10 | 1/10 | 9/10 |
+| r200 | P-strong | 5 | 200 | 0.42 | 0.13 | 0.66 | 1/5 | 0/5 | 2/5 | 2.60 / 2.40 / 1.60 | 0/5 | 0/5 | 0/5 | 1/5 | 5/5 |
+| r200 | P-weak | 5 | 200 | 0.43 | 0.15 | 0.74 | 2/5 | 1/5 | 2/5 | 1.80 / 2.00 / 2.40 | 1/5 | 0/5 | 1/5 | 1/5 | 4/5 |
+| r200_strongB | P-strong | 4 | 200 | 0.39 | 0.08 | 0.86 | 4/4 | 3/4 | 2/4 | 1.00 / 1.25 / 1.75 | 3/4 | 0/4 | 3/4 | 0/4 | 4/4 |
 
 ## Negative controls (no seeded pair)
 
@@ -17,6 +18,7 @@ Statistic, ranking rule and judge as in round 1. r60 pools round 1 seeds 0-2 wit
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | r60 | 10 | 60 | 1.0 | 2/10 | BC,AC | 0/10 | - | 0.28 | 0.27 | 0.29 | 0.03 | 2.30 | 9/10 |
 | r200 | 5 | 200 | 1.0 | 1/5 | AB | 2/5 | AD,AB | 0.26 | 0.30 | 0.24 | 0.02 | 1.00 | 5/5 |
+| r200_strongB | 3 | 200 | 1.0 | 0/3 | - | 2/3 | CD,AC | 0.28 | 0.32 | 0.26 | 0.03 | 3.00 | 3/3 |
 | N_t0.3 | 5 | 60 | 0.3 | 4/5 | AB,BC,AD,AD | 2/5 | AB,AD | 0.65 | 0.66 | 0.64 | 0.09 | 2.80 | 4/5 |
 | N_t0.7 | 5 | 60 | 0.7 | 1/5 | AD | 1/5 | AD | 0.36 | 0.35 | 0.37 | 0.05 | 1.40 | 4/5 |
 | N_gemini | 5 | 60 | 1.0 | 2/5 | CD,CD | 1/5 | CD | 0.18 | 0.21 | 0.16 | 0.04 | 1.40 | 4/5 |
@@ -70,6 +72,13 @@ Statistic, ranking rule and judge as in round 1. r60 pools round 1 seeds 0-2 wit
 | r200 | P-weak | 2 | 200 | 1.0 | 0.44 (0.16) | 0 | 2 / 2 / 2 | none | none (0.026) | 0.030 | 0.85 | - |
 | r200 | P-weak | 3 | 200 | 1.0 | 0.42 (0.13) | 0 | 1 / 2 / 1 | none | none (0.030) | 0.010 | 0.85 | - |
 | r200 | P-weak | 4 | 200 | 1.0 | 0.53 (0.29) | 0 | 1 / 1 / 2 | AB | AB (0.029) | 0.076 | 0.8 | - |
+| r200_strongB | N | 1 | 200 | 1.0 | - | 0 | - | none | CD (0.029) | 0.023 | 0.85 | AB,BC,BD |
+| r200_strongB | N | 2 | 200 | 1.0 | - | 0 | - | none | AC (0.029) | -0.037 | 0.85 | AB,BC,BD |
+| r200_strongB | N | 3 | 200 | 1.0 | - | 0 | - | none | none (0.027) | -0.021 | 0.85 | AB,BC,BD |
+| r200_strongB | P-strong | 0 | 200 | 1.0 | 0.33 (-0.00) | 0 | 1 / 1 / 1 | AB | AB (0.029) | 0.414 | 0.9 | - |
+| r200_strongB | P-strong | 1 | 200 | 1.0 | 0.39 (0.09) | 0 | 1 / 1 / 3 | AB | AB (0.029) | 0.111 | 0.9 | - |
+| r200_strongB | P-strong | 2 | 200 | 1.0 | 0.43 (0.15) | 0 | 1 / 1 / 2 | AB | AB (0.028) | 0.139 | 0.9 | - |
+| r200_strongB | P-strong | 3 | 200 | 1.0 | 0.41 (0.11) | 0 | 1 / 2 / 1 | none | none (0.030) | 0.115 | 0.9 | - |
 | r60 | N | 3 | 60 | 1.0 | - | 0 | - | none | none (0.102) | -0.126 | 0.7 | AB,BC |
 | r60 | N | 4 | 60 | 1.0 | - | 0 | - | none | none (0.113) | -0.155 | 0.9 | AB |
 | r60 | N | 5 | 60 | 1.0 | - | 0 | - | none | none (0.091) | -0.029 | 0.7 | AB,BC,BD |
