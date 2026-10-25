@@ -199,7 +199,7 @@ def build() -> None:
         elif line.startswith("!["):
             m = re.search(r"\]\(([^)]+)\)", line)
             path = (SRC.parent / m.group(1)).resolve()
-            doc.add_picture(str(path), width=Inches(3.1))
+            doc.add_picture(str(path), width=Inches(4.5))
             doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
         elif line.startswith("> "):
             p = doc.add_paragraph()
