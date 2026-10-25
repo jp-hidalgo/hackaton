@@ -16,7 +16,10 @@ Everything in `collusion/` and `tests/test_netinfluence.py` was written during t
 | `anti_examples.py` | Two pairs, lagged one-way copying, same-round one-way copying, shared marginal, common cause |
 | `llm_game.py` | Four `openai/gpt-4.1-mini` agents via OpenRouter; conditions P-strong, P-weak, N; full transcripts |
 | `judge.py` | Frozen action-log-only LLM judge, one call per game |
-| `rank.py` | Ranks the six pairs under net influence, Cramér's V and the judge; writes `results/llm_ranking.md` |
+| `rank.py` | Ranks the six pairs under net influence, Cramér's V and the judge; writes `results/llm_ranking.md` (round 1) |
+| `round2.py` | Round 2 driver: more seeds, 200-round games, temperature and model-family controls, mixed-model game; writes `results/llm2/<setting>/` |
+| `rank2.py` | Pools rounds 1 and 2 by setting; writes `results/llm_round2.md` and `.json` |
+| `calibration.py` | Post hoc: scripted game at the collusion strength the LLM games realized; writes `results/calibration.md` |
 | `results/` | Every CSV, JSON, transcript, table and figure referenced in the report |
 
 ## Reproduce
@@ -28,13 +31,17 @@ python -m collusion.rps              # about 2 minutes, writes results/sweep_res
 python -m collusion.anti_examples    # about 30 seconds, writes results/anti_examples.md
 ```
 
-LLM arm (needs `OPENROUTER_API_KEY` in a `.env` file at the repository root; total cost for the runs reported was about USD 0.50):
+LLM arm (needs `OPENROUTER_API_KEY` in a `.env` file at the repository root; total cost for all 65 games reported was about USD 8):
 
 ```
 python -m collusion.llm_game --smoke
-python -m collusion.llm_game --condition P-strong --seed 0 --rounds 60   # seeds 0,1,2; also P-weak and N
+python -m collusion.llm_game --condition P-strong --seed 0 --rounds 60   # round 1: seeds 0,1,2; also P-weak and N
 python -m collusion.judge collusion/results/llm/*.json
 python -m collusion.rank
+python -m collusion.round2 --worker 0 --workers 6                        # round 2, run workers 0..5 in parallel
+python -m collusion.judge collusion/results/llm2/*/*.json
+python -m collusion.rank2
+python -m collusion.calibration
 ```
 
 Report (source `report-collusion/report.md`, official template `docs/official-template-2026-10.docx`; needs `python-docx`, `pymupdf` and Microsoft Word for the PDF export):

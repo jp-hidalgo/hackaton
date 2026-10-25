@@ -189,13 +189,17 @@ def build() -> None:
         if not line.strip():
             continue
         if line.startswith("## "):
-            doc.add_heading(line[3:], level=2)
+            h = doc.add_heading(line[3:], level=2)
+            h.paragraph_format.space_before = Pt(10)
+            h.paragraph_format.space_after = Pt(4)
         elif line.startswith("### "):
-            doc.add_heading(line[4:], level=3)
+            h = doc.add_heading(line[4:], level=3)
+            h.paragraph_format.space_before = Pt(8)
+            h.paragraph_format.space_after = Pt(2)
         elif line.startswith("!["):
             m = re.search(r"\]\(([^)]+)\)", line)
             path = (SRC.parent / m.group(1)).resolve()
-            doc.add_picture(str(path), width=Inches(4.0))
+            doc.add_picture(str(path), width=Inches(3.1))
             doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
         elif line.startswith("> "):
             p = doc.add_paragraph()
@@ -207,7 +211,7 @@ def build() -> None:
             p.paragraph_format.left_indent = Inches(0.25)
         else:
             p = doc.add_paragraph()
-            p.paragraph_format.space_after = Pt(3)
+            p.paragraph_format.space_after = Pt(2)
             add_inline(p, line)
     if table_buf:
         add_table(doc, parse_table(table_buf))
