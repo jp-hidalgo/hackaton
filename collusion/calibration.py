@@ -18,6 +18,7 @@ from collusion.rps import RESULTS, sweep
 SETTINGS = [  # setting, condition, rounds
     ("r60", "P-strong", 60), ("r60", "P-weak", 60),
     ("r200", "P-strong", 200), ("r200", "P-weak", 200),
+    ("r200_strongB", "P-strong", 200),
 ]
 
 
@@ -34,7 +35,9 @@ def main() -> None:
         "|---|---|---|---|---|---|---|---|",
     ]
     for setting, cond, rounds in SETTINGS:
-        s = next(x for x in summary if x["setting"] == setting and x["condition"] == cond)
+        s = next((x for x in summary if x["setting"] == setting and x["condition"] == cond), None)
+        if s is None:
+            continue
         cp = float(s["cp_excess"])
         row = sweep(cps=(cp,), games=(rounds,), reps=200, n_players=4, seed=7, n_perm=300)[0]
         lines.append(

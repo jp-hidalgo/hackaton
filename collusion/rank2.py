@@ -21,7 +21,7 @@ from collusion.rank import LLM, NAMES, PAIRS, RESULTS, analyse, pair_str
 
 LLM2 = RESULTS / "llm2"
 SAME_MODEL_PAIRS = {"AB", "CD"}
-SETTING_ORDER = ["r60", "r200", "N_t0.3", "N_t0.7", "N_gemini", "N_mixed"]
+SETTING_ORDER = ["r60", "r200", "r200_strongB", "N_t0.3", "N_t0.7", "N_gemini", "N_mixed"]
 
 
 def load_all() -> list[dict]:
