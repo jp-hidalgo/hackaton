@@ -5,6 +5,9 @@ reply is appended to a JSONL file under results/. Finished pairs and solos are
 skipped on rerun, so the script is resumable. Several workers can run at once;
 each writes its own file.
 
+Provider: Adaption Responses API (amendment 1). Needs ADAPTION_API_KEY in .env.
+
+  python -m schelling.run --probe                   # throwaway prompt to candidate models
   python -m schelling.run --smoke                   # one pair + one solo, results/smoke/
   python -m schelling.run --worker 0 --workers 2    # full grid
   python -m schelling.run --only-solo               # solo marginals only
@@ -19,31 +22,59 @@ import re
 import time
 from pathlib import Path
 
+import httpx
 from dotenv import load_dotenv
-from openai import OpenAI
 
-from schelling.prompts import (CONDITIONS, GEMINI, GPT, MENUS, N_PAIRS, N_SOLO, SOLO_SPECS,
-                               TEMPERATURE, option_order, render)
+from schelling.prompts import (CONDITIONS, COPY_MODEL, MENUS, N_PAIRS, N_SOLO, OTHER_MODEL,
+                               SOLO_SPECS, TEMPERATURE, option_order, render)
 
 RESULTS = Path(__file__).resolve().parent / "results"
-SPEND_CAP_USD = 20.0
+BASE_URL = "https://api.prod.adaptionlabs.ai/api/v1"
+SPEND_CAP_CREDITS = 100.0   # of the 1500 available; expected spend is far below
 MAX_ATTEMPTS = 3
+MAX_OUTPUT_TOKENS = 60
 
-# OpenRouter list prices, USD per million tokens (prompt, completion), 7 Nov 2026.
-PRICES = {GPT: (0.40, 1.60), GEMINI: (0.30, 2.50)}
+# Adaption list prices, credits per million tokens (input, output), docs read 7 Nov 2026.
+PRICES = {
+    "gemma-4-31b-it": (0.09, 0.34),
+    "gemma-4-26b-a4b-it": (0.0765, 0.255),
+    "qwen3.5-397b": (0.55, 3.50),
+    "qwen3.8-27b": (0.039, 1.25),
+    "deepseek-v4-flash": (0.04444, 0.13332),
+    "glm-5.2": (1.40, 4.40),
+    "glm-53-flash": (0.15, 0.50),
+}
+PROBE_MODELS = ["gemma-4-31b-it", "deepseek-v4-flash", "qwen3.8-27b", "glm-53-flash",
+                "gemma-4-26b-a4b-it"]
 
 
-def make_client() -> OpenAI:
-    load_dotenv()
-    key = os.environ.get("OPENROUTER_API_KEY")
-    if not key:
-        raise SystemExit("OPENROUTER_API_KEY not set (put it in .env)")
-    return OpenAI(base_url="https://openrouter.ai/api/v1", api_key=key)
+class Client:
+    def __init__(self) -> None:
+        load_dotenv()
+        key = os.environ.get("ADAPTION_API_KEY")
+        if not key:
+            raise SystemExit("ADAPTION_API_KEY not set (put it in .env)")
+        self.http = httpx.Client(base_url=BASE_URL, timeout=60.0,
+                                 headers={"Authorization": f"Bearer {key}",
+                                          "Content-Type": "application/json"})
+
+    def respond(self, model: str, prompt: str, max_output_tokens: int = MAX_OUTPUT_TOKENS) -> dict:
+        body = {"model": model, "input": prompt, "temperature": TEMPERATURE,
+                "max_output_tokens": max_output_tokens, "store": False}
+        r = self.http.post("/responses", json=body)
+        r.raise_for_status()
+        return r.json()
 
 
-def request_extras(model: str) -> dict:
-    """Gemini 2.5 thinks by default; turn it off so the reply is the bare JSON."""
-    return {"reasoning": {"enabled": False}} if "gemini" in model else {}
+def output_text(resp: dict) -> str:
+    if resp.get("output_text"):
+        return resp["output_text"]
+    parts = []
+    for item in resp.get("output", []):
+        for c in item.get("content", []) or []:
+            if c.get("type") == "output_text" and c.get("text"):
+                parts.append(c["text"])
+    return "".join(parts)
 
 
 def parse_choice(text: str, options: list[str]) -> str | None:
@@ -61,38 +92,40 @@ def parse_choice(text: str, options: list[str]) -> str | None:
     return None
 
 
-def cost_usd(model: str, prompt_tokens: int, completion_tokens: int) -> float:
-    p_in, p_out = PRICES[model]
+def cost_credits(model: str, prompt_tokens: int, completion_tokens: int) -> float:
+    p_in, p_out = PRICES.get(model, (0.0, 0.0))
     return (prompt_tokens * p_in + completion_tokens * p_out) / 1e6
 
 
-def one_call(client: OpenAI, model: str, prompt: str, options: list[str]) -> dict:
+def one_call(client: Client, model: str, prompt: str, options: list[str]) -> dict:
     """One agent's decision. Retries parse failures and transport errors."""
     attempts = []
     choice = None
-    usage = {"prompt": 0, "completion": 0}
+    usage = {"prompt": 0, "completion": 0, "reasoning": 0}
     for attempt in range(MAX_ATTEMPTS):
         try:
-            resp = client.chat.completions.create(
-                model=model, temperature=TEMPERATURE, max_tokens=40,
-                messages=[{"role": "user", "content": prompt}],
-                extra_body=request_extras(model),
-            )
+            resp = client.respond(model, prompt)
         except Exception as exc:  # rate limit or network: back off, retry
             attempts.append({"raw": f"ERROR {exc}"})
             time.sleep(3 + 7 * attempt)
             continue
-        raw = resp.choices[0].message.content or ""
-        if resp.usage:
-            usage["prompt"] += resp.usage.prompt_tokens
-            usage["completion"] += resp.usage.completion_tokens
-        attempts.append({"raw": raw})
+        raw = output_text(resp)
+        u = resp.get("usage") or {}
+        usage["prompt"] += int(u.get("input_tokens", 0) or 0)
+        usage["completion"] += int(u.get("output_tokens", 0) or 0)
+        details = u.get("output_tokens_details") or {}
+        try:
+            usage["reasoning"] += int(details.get("reasoning_tokens", 0) or 0)
+        except (TypeError, ValueError):
+            pass
+        attempts.append({"raw": raw, "status": resp.get("status"),
+                         "incomplete": resp.get("incomplete_details")})
         choice = parse_choice(raw, options)
         if choice is not None:
             break
     return {"model": model, "prompt": prompt, "options": options, "attempts": attempts,
             "choice": choice, "usage": usage,
-            "cost_usd": cost_usd(model, usage["prompt"], usage["completion"])}
+            "cost_usd": cost_credits(model, usage["prompt"], usage["completion"])}
 
 
 def pair_jobs() -> list[dict]:
@@ -129,7 +162,7 @@ def load_records(results_dir: Path) -> list[dict]:
     return records
 
 
-def run_pair(client: OpenAI, job: dict) -> dict:
+def run_pair(client: Client, job: dict) -> dict:
     (m1, v1), (m2, v2), shuffled = CONDITIONS[job["condition"]]
     agents = []
     for idx, (model, variant) in enumerate(((m1, v1), (m2, v2)), start=1):
@@ -141,12 +174,12 @@ def run_pair(client: OpenAI, job: dict) -> dict:
     rec["key"] = job_key(job)
     rec["agents"] = agents
     rec["match"] = (agents[0]["choice"] is not None and agents[0]["choice"] == agents[1]["choice"])
-    rec["cost_usd"] = sum(a["cost_usd"] for a in agents)
+    rec["cost_usd"] = sum(a["cost_usd"] for a in agents)   # field name kept; unit is credits
     rec["time"] = time.strftime("%Y-%m-%dT%H:%M:%S")
     return rec
 
 
-def run_solo(client: OpenAI, job: dict) -> dict:
+def run_solo(client: Client, job: dict) -> dict:
     order = list(MENUS[job["menu"]])
     res = one_call(client, job["model"], render(job["menu"], job["variant"], order), order)
     res["variant"] = job["variant"]
@@ -158,6 +191,28 @@ def run_solo(client: OpenAI, job: dict) -> dict:
     return rec
 
 
+def probe(client: Client) -> None:
+    """Throwaway prompt, not from the grid: does the model answer with bare JSON,
+    does it spend reasoning tokens, how long does it take."""
+    prompt = ('Pick one colour from this list: red, green, blue. Reply with JSON only, '
+              'in the form {"choice": "<colour>"}.')
+    out_dir = RESULTS / "probe"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for model in PROBE_MODELS:
+        t0 = time.time()
+        try:
+            resp = client.respond(model, prompt)
+        except Exception as exc:
+            print(f"{model}: ERROR {exc}")
+            continue
+        dt = time.time() - t0
+        (out_dir / f"{model}.json").write_text(json.dumps(resp, indent=1), encoding="utf-8")
+        u = resp.get("usage") or {}
+        print(f"{model}: {dt:.1f}s status={resp.get('status')} in={u.get('input_tokens')} "
+              f"out={u.get('output_tokens')} details={u.get('output_tokens_details')} "
+              f"text={output_text(resp)!r}")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--worker", type=int, default=0)
@@ -165,27 +220,32 @@ def main() -> None:
     ap.add_argument("--only-solo", action="store_true")
     ap.add_argument("--only-pairs", action="store_true")
     ap.add_argument("--smoke", action="store_true")
+    ap.add_argument("--probe", action="store_true")
     args = ap.parse_args()
 
-    client = make_client()
+    client = Client()
+    if args.probe:
+        probe(client)
+        return
     if args.smoke:
         out_dir = RESULTS / "smoke"
         out_dir.mkdir(parents=True, exist_ok=True)
         recs = [run_pair(client, {"kind": "pair", "menu": "spec", "condition": "cross",
                                   "pair": 99}),
-                run_solo(client, {"kind": "solo", "menu": "neutral", "model": GPT,
+                run_solo(client, {"kind": "solo", "menu": "neutral", "model": COPY_MODEL,
                                   "variant": "base", "index": 99})]
         with (out_dir / "smoke.jsonl").open("a", encoding="utf-8") as fh:
             for r in recs:
                 fh.write(json.dumps(r) + "\n")
-                print(json.dumps({k: r[k] for k in r if k not in ("agents", "agent")}),
-                      [a["choice"] for a in r.get("agents", [r.get("agent")])])
-        print(f"smoke cost USD {sum(r['cost_usd'] for r in recs):.5f}")
+                agents = r.get("agents") or [r.get("agent")]
+                print(r["key"], [(a["model"], a["choice"], a["usage"]) for a in agents])
+        print(f"smoke cost {sum(r['cost_usd'] for r in recs):.5f} credits")
         return
 
     RESULTS.mkdir(parents=True, exist_ok=True)
-    done = {r["key"] for r in load_records(RESULTS)}
-    spent = sum(r["cost_usd"] for r in load_records(RESULTS))
+    existing = load_records(RESULTS)
+    done = {r["key"] for r in existing}
+    spent = sum(r["cost_usd"] for r in existing)
     jobs = []
     if not args.only_solo:
         jobs += pair_jobs()
@@ -198,8 +258,8 @@ def main() -> None:
             key = job_key(j)
             if key in done:
                 continue
-            if spent >= SPEND_CAP_USD:
-                print(f"spend cap reached ({spent:.2f} USD); stopping")
+            if spent >= SPEND_CAP_CREDITS:
+                print(f"spend cap reached ({spent:.2f} credits); stopping")
                 return
             rec = run_pair(client, j) if j["kind"] == "pair" else run_solo(client, j)
             spent += rec["cost_usd"]

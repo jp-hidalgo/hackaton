@@ -92,4 +92,15 @@ Spend cap USD 20 at OpenRouter list prices, estimated from logged token usage. I
 
 ## Amendments
 
-(none yet)
+### Amendment 1, Saturday 7 November 2026, 12:20 (UTC-6): provider and models
+
+Before any grid or solo call. An OpenRouter smoke run was started at 12:03 and hung on the network with no record written; it was killed and no result was seen.
+
+Change: calls go through the Adaption Responses API (`https://api.prod.adaptionlabs.ai/api/v1/responses`, sprint partner credits) instead of OpenRouter. Adaption does not host `gpt-4.1-mini` or `gemini-2.5-flash`, so the two model families change. Everywhere the design above says "gpt" read `COPY_MODEL`, and everywhere it says "gemini" read `OTHER_MODEL`, as set in `schelling/prompts.py`:
+
+- `COPY_MODEL = gemma-4-31b-it` (Google Gemma 4, instruction tuned). Plays both agents in `same`, `shuffle` and `paraphrase`, and agent 1 in `cross` and `cross_shuffle`.
+- `OTHER_MODEL = deepseek-v4-flash` (DeepSeek). Agent 2 in `cross` and `cross_shuffle`.
+
+Selection rule, fixed now: a throwaway probe prompt (pick a colour from red, green, blue; not a grid menu) is sent once to each candidate hosted model. A model is eligible if it returns parseable JSON, reports zero reasoning tokens, and answers in under 20 s. `COPY_MODEL` is the cheapest eligible Gemma; `OTHER_MODEL` is the cheapest eligible model from a different family. If `deepseek-v4-flash` fails the probe, the fallback order is `qwen3.8-27b`, then `glm-53-flash`. Any substitution is recorded here with the probe output before the first grid call. The probe output is kept in `results/probe/`.
+
+Spend cap becomes 100 Adaption credits (of 1500), estimated from logged token usage at the documented credit prices. The `cost_usd` field in the records holds credits. Everything else (menus, prompts, conditions, n, metrics, predictions, exit bar) is unchanged. Predictions P1-P5 now refer to the new pair of models.

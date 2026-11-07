@@ -56,6 +56,20 @@ class TestParse(unittest.TestCase):
         self.assertEqual(parse_choice('{"choice": "Library"}', opts), "library")
         self.assertEqual(parse_choice('```json\n{"choice": "town square"}\n```', opts), "town square")
 
+    def test_models_named_in_preregistration(self):
+        text = (ROOT / "schelling" / "PREREGISTRATION.md").read_text(encoding="utf-8")
+        self.assertIn(f"COPY_MODEL = {prompts.COPY_MODEL}", text)
+        self.assertIn(f"OTHER_MODEL = {prompts.OTHER_MODEL}", text)
+        self.assertNotEqual(prompts.COPY_MODEL, prompts.OTHER_MODEL)
+
+    def test_output_text_fallback(self):
+        from schelling.run import output_text
+        resp = {"output": [{"type": "reasoning"},
+                           {"type": "message", "content": [{"type": "output_text", "text": "a"},
+                                                           {"type": "output_text", "text": "b"}]}]}
+        self.assertEqual(output_text(resp), "ab")
+        self.assertEqual(output_text({"output_text": "x"}), "x")
+
     def test_fallback_unique_mention(self):
         opts = prompts.MENUS["neutral"]
         self.assertEqual(parse_choice("I pick brimmoth.", opts), "brimmoth")
@@ -81,7 +95,7 @@ class TestAnalyze(unittest.TestCase):
         self.assertAlmostEqual(analyze.independence_baseline(p, p), (2 / 3) ** 2 + (1 / 3) ** 2)
 
     def test_cell_stats_and_excess(self):
-        gpt, gem = prompts.GPT, prompts.GEMINI
+        gpt, gem = prompts.COPY_MODEL, prompts.OTHER_MODEL
         recs = []
         recs += [solo("spec", gpt, "base", "library", k) for k in range(8)]
         recs += [solo("spec", gpt, "base", "gym", k) for k in range(8, 10)]

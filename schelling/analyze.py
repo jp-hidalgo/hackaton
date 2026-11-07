@@ -113,7 +113,7 @@ def summarise(recs: list[dict]) -> tuple[dict, str]:
     lines = ["# Results summary", "",
              f"{len([r for r in recs if r['kind']=='pair'])} pairs, "
              f"{len([r for r in recs if r['kind']=='solo'])} solos, {n_calls} calls, "
-             f"estimated spend USD {spend:.3f}. Uniform chance = {UNIFORM:.3f}.", ""]
+             f"estimated spend {spend:.3f} Adaption credits. Uniform chance = {UNIFORM:.3f}.", ""]
     lines += ["## Match rate, baselines, excess", "",
               "| Menu | Condition | n | Match | 95% CI | B_solo | B_cell | Excess (solo) | Excess (cell) | Nulls |",
               "|---|---|---|---|---|---|---|---|---|---|"]
@@ -145,7 +145,7 @@ def summarise(recs: list[dict]) -> tuple[dict, str]:
         t2 = ", ".join(f"{o} {v:.2f}" for o, v in sorted(c["marginal_agent2"].items(), key=lambda kv: -kv[1]) if v > 0)
         lines.append(f"- {c['menu']} / {c['condition']}: agent 1: {t1}; agent 2: {t2}")
     summary = {"cells": cells, "solos": {"|".join(k): v for k, v in solos.items()},
-               "spend_usd": spend, "calls": n_calls}
+               "spend_credits": spend, "calls": n_calls}
     return summary, "\n".join(lines) + "\n"
 
 

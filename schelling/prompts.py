@@ -8,8 +8,14 @@ from __future__ import annotations
 
 import numpy as np
 
-GPT = "openai/gpt-4.1-mini"
-GEMINI = "google/gemini-2.5-flash"
+# Provider switched from OpenRouter to Adaption (PREREGISTRATION.md, amendment 1,
+# 7 Nov 12:20). COPY_MODEL plays both agents in the same-model cells; OTHER_MODEL
+# is the second family in the cross cells. Set after the --probe run, before any
+# grid call.
+COPY_MODEL = "gemma-4-31b-it"
+OTHER_MODEL = "deepseek-v4-flash"
+GPT = COPY_MODEL      # legacy names kept so the condition table reads as in the prereg
+GEMINI = OTHER_MODEL
 TEMPERATURE = 1.0
 N_PAIRS = 30
 N_SOLO = 30

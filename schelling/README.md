@@ -12,7 +12,7 @@ Everything in `schelling/`, `tests/test_schelling.py` and `report-schelling/` wa
 |---|---|
 | `PREREGISTRATION.md` | Menus, prompt texts, conditions, n, metrics, predictions, spend cap, timestamped amendments |
 | `prompts.py` | Frozen menus, prompts, conditions, seeded option permutation |
-| `run.py` | One call per agent via OpenRouter; resumable JSONL logs with every raw reply |
+| `run.py` | One call per agent via the Adaption Responses API; model probe; resumable JSONL logs with every raw reply |
 | `analyze.py` | Match rate, independence baselines, excess, spec compliance, Wilson intervals; writes `results/summary.md` |
 | `protocol.py` | Simulated flag-on-disagreement policy from the saved pairs; writes `results/protocol.md` |
 | `results/` | Raw records (`records_w*.jsonl`), smoke run, summary tables |
@@ -20,13 +20,14 @@ Everything in `schelling/`, `tests/test_schelling.py` and `report-schelling/` wa
 ## Reproduce
 
 ```
-pip install numpy openai python-dotenv
+pip install numpy httpx python-dotenv
 python -m unittest tests.test_schelling          # offline
 ```
 
-LLM runs need `OPENROUTER_API_KEY` in a `.env` file at the repository root.
+LLM runs go through the Adaption Responses API (sprint partner) and need `ADAPTION_API_KEY` in a `.env` file at the repository root. Models: `gemma-4-31b-it` for the copies, `deepseek-v4-flash` as the second family (PREREGISTRATION.md, amendment 1).
 
 ```
+python -m schelling.run --probe                   # throwaway prompt to candidate models, results/probe/
 python -m schelling.run --smoke                   # one pair and one solo, results/smoke/
 python -m schelling.run --worker 0 --workers 2    # run workers 0 and 1 in two shells
 python -m schelling.analyze
