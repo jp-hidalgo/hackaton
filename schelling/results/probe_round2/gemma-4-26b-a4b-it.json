@@ -1,0 +1,83 @@
+{
+ "id": "resp_VLC820qadnw51Lvjm-16awEvSfRj0minqZ6yUUbIYxZd60TYJ7IpQC1I1cFOyu0cK0cwxxuE59DMYwdpWRsj2km8Y784RODhrvV6v2tOutHv08JauuRU75ALTb49v4ZQjYwR5HF0heqUckitovTVp26PxIiCsHILZQqw_C_XkwKtj6gPJRvHWeUfMrUTVg4jw5JQKCl5wCjPnlXi2utvywuHt303DRsDLKC5LpxVKwAKrT0QwyOZ-Zd882LueXZ3M7V9tz29-pRULuGv3q3rvmP2kiVlf2WJSMgLCon26kq0dQrbXsMVaDM7QZRfudJnGI_K1xGgTWKKMppMv8qngisP85YSfZ83QsBDr5yCr8pnsl8xwzXR4P94VDXF2q8FjFzrJ335mjlp6PN3EzX6rabMxQBEC6Eidqe5xeTvuvagwhmE03o1y-9M7XNZGy_k1pUFeM_LXfbGL1gKpQpCJ7Wpsp1K5LVGQ774Lg4_JY2UnVrCxsac5ah6h2OXm9BkQJgA5lt_m7Cav7i1xV6HMZUM0Gw=",
+ "created_at": 1794076279,
+ "error": null,
+ "incomplete_details": null,
+ "instructions": null,
+ "metadata": null,
+ "model": "gemma-4-26b-a4b-it",
+ "object": "response",
+ "output": [
+  {
+   "id": "msg_bfede964e6f1c582",
+   "content": [
+    {
+     "annotations": [],
+     "text": "```json\n{\"choice\": \"blue\"}\n```",
+     "type": "output_text",
+     "logprobs": null
+    }
+   ],
+   "role": "assistant",
+   "status": "completed",
+   "type": "message",
+   "phase": null
+  }
+ ],
+ "parallel_tool_calls": true,
+ "temperature": 1,
+ "tool_choice": "none",
+ "tools": [],
+ "top_p": 0.95,
+ "max_output_tokens": 60,
+ "previous_response_id": null,
+ "reasoning": {
+  "context": null,
+  "effort": "none",
+  "generate_summary": null,
+  "mode": null,
+  "summary": null
+ },
+ "status": "completed",
+ "text": null,
+ "truncation": "disabled",
+ "usage": {
+  "input_tokens": 41,
+  "input_tokens_details": {
+   "audio_tokens": null,
+   "cached_tokens": 0,
+   "cached_tokens_details": null,
+   "image_tokens": null,
+   "text_tokens": null,
+   "video_tokens": null,
+   "cache_write_tokens": 0,
+   "input_tokens_per_turn": [],
+   "cached_tokens_per_turn": []
+  },
+  "output_tokens": 12,
+  "output_tokens_details": {
+   "audio_tokens": null,
+   "reasoning_tokens": 0,
+   "text_tokens": null,
+   "tool_output_tokens": 0,
+   "output_tokens_per_turn": [],
+   "tool_output_tokens_per_turn": []
+  },
+  "total_tokens": 53,
+  "cost": 6.1965e-06
+ },
+ "user": null,
+ "store": false,
+ "background": false,
+ "max_tool_calls": null,
+ "prompt": null,
+ "service_tier": "auto",
+ "top_logprobs": null,
+ "presence_penalty": 0,
+ "frequency_penalty": 0,
+ "kv_transfer_params": null,
+ "ec_transfer_params": null,
+ "input_messages": null,
+ "output_messages": null,
+ "output_text": "```json\n{\"choice\": \"blue\"}\n```"
+}

@@ -125,6 +125,11 @@ class TestParse(unittest.TestCase):
         self.assertEqual(output_text(resp), "ab")
         self.assertEqual(output_text({"output_text": "x"}), "x")
 
+    def test_last_valid_choice_wins(self):
+        opts = ["red", "green", "blue"]
+        text = 'reply in the form {"choice": "<colour>"}. I pick blue. {"choice": "blue"}'
+        self.assertEqual(parse_choice(text, opts), "blue")
+
     def test_fallback_unique_mention(self):
         opts = prompts.MENUS["neutral"]
         self.assertEqual(parse_choice("I pick brimmoth.", opts), "brimmoth")

@@ -1,0 +1,83 @@
+{
+ "id": "resp_oaugglCA6uQGw7RAidD0HInB_KLo3OmAC80FAeF-Q598yLU2Kq-fwBcWRdJLRHIPciTFRqjLP-mcAjFx_ESi6n656uIcs380IU2GSbI4pq7oJjDL91g0iWnzwLuyugsCCemWBJ8ZlpDnUUJUG6Mz9ItetJ65iBJS6uDqhmnSkw0AQhI-PC-Lrc5cZMAAceKRZ7d7rAM-uLJkZKKIr7lJkEdXGqDo7VDcoDJAiLBoMZuQVhRDmlGZkn-JKyC9OhGHxJlVYP06DohFfNUHJII0RpSkuO2LDx0lRcGBoOd17pkwiamLGgEMxBvm4Pm5oYzJcUy4ZVeo2UEFuMOXRLBo2QS3sjye22TWndNrjYfm7gUVZ1o-orj_5uER5zpTlF-dJSXY7-z0X2MP26WcLoQCB5oUVjMFM34yaebquMjA9n9-Kze1RHX_4ZROPZXWpXW4lhepyKF756tHesWJHATSYcrd0_t078c3f9yln9hHNuuRj1S9-Ap4XuD7YcuaPPg66UHfchzmdcAKRyQz40tLQO6gC4E=",
+ "created_at": 1794076280,
+ "error": null,
+ "incomplete_details": null,
+ "instructions": null,
+ "metadata": null,
+ "model": "qwen3.8-27b",
+ "object": "response",
+ "output": [
+  {
+   "id": "msg_a73612023793f249",
+   "content": [
+    {
+     "annotations": [],
+     "text": "{\"choice\": \"blue\"}",
+     "type": "output_text",
+     "logprobs": null
+    }
+   ],
+   "role": "assistant",
+   "status": "completed",
+   "type": "message",
+   "phase": null
+  }
+ ],
+ "parallel_tool_calls": true,
+ "temperature": 1,
+ "tool_choice": "none",
+ "tools": [],
+ "top_p": 0.95,
+ "max_output_tokens": 60,
+ "previous_response_id": null,
+ "reasoning": {
+  "context": null,
+  "effort": "none",
+  "generate_summary": null,
+  "mode": null,
+  "summary": null
+ },
+ "status": "completed",
+ "text": null,
+ "truncation": "disabled",
+ "usage": {
+  "input_tokens": 40,
+  "input_tokens_details": {
+   "audio_tokens": null,
+   "cached_tokens": 0,
+   "cached_tokens_details": null,
+   "image_tokens": null,
+   "text_tokens": null,
+   "video_tokens": null,
+   "cache_write_tokens": 0,
+   "input_tokens_per_turn": [],
+   "cached_tokens_per_turn": []
+  },
+  "output_tokens": 7,
+  "output_tokens_details": {
+   "audio_tokens": null,
+   "reasoning_tokens": 0,
+   "text_tokens": null,
+   "tool_output_tokens": 0,
+   "output_tokens_per_turn": [],
+   "tool_output_tokens_per_turn": []
+  },
+  "total_tokens": 47,
+  "cost": 1.0310000000000001e-05
+ },
+ "user": null,
+ "store": false,
+ "background": false,
+ "max_tool_calls": null,
+ "prompt": null,
+ "service_tier": "auto",
+ "top_logprobs": null,
+ "presence_penalty": 0,
+ "frequency_penalty": 0,
+ "kv_transfer_params": null,
+ "ec_transfer_params": null,
+ "input_messages": null,
+ "output_messages": null,
+ "output_text": "{\"choice\": \"blue\"}"
+}

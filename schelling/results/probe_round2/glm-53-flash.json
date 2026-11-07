@@ -1,0 +1,83 @@
+{
+ "id": "resp_9-J9zVnYDrMcx-J5SAhyUE668Q19CGFvvCyjOcvXHtnWF2v09kCyL-wFX_uG9oa2WofoG9fNBg07yKJgjur3Lb9eI84BICOj4dnHCHo0qzEYpMKAECUrCQdBM4l9ubOIU69GUDeeYZTxFxgd3E4uaDPmoPhP3qQA7L4wL48hodqQT7zusR_ViZm185i6PTCxRM5RyhC9H9-MIaFWBqB2XiH5TZ6Rg38Tg8npYhmUso8sCzrro97KGanC-26nWLUoVQ6G9DE83wpr7LWpJ6N7h1A7XHS39qHlhrmh_r01-9Yl8qFAFZ9TSKV0E8CqJKgGfKw3DSPG76D9J0Hbr678_jBJa1VlSAueNTkyg7EVP3_74oUT2GY1npu_GVD-sO_6Z_9N9FdPAMm6CB1KEUyuudpqBrR6l0H738MCgu1vO_P_RmDJMi1T9_T-GjSIdJI5u7rwjRLCATGoogqv99GuMzDji5i_nGgyh_oLON-ShOJrIXPisxCbuS-Rz_rnMBO1jr6ZxeIYrj6GKxoBTDjssGAmjUM=",
+ "created_at": 1794076281,
+ "error": null,
+ "incomplete_details": null,
+ "instructions": null,
+ "metadata": null,
+ "model": "glm-53-flash",
+ "object": "response",
+ "output": [
+  {
+   "id": "msg_9672c5ea97763615",
+   "content": [
+    {
+     "annotations": [],
+     "text": "The user wants me to pick one color from red, green, blue and reply with JSON only in the form {\"choice\": \"<colour>\"}.\n\nI'll pick one \u2014 let's say blue. The response should be JSON only.{\"choice\": \"blue\"}",
+     "type": "output_text",
+     "logprobs": null
+    }
+   ],
+   "role": "assistant",
+   "status": "completed",
+   "type": "message",
+   "phase": null
+  }
+ ],
+ "parallel_tool_calls": true,
+ "temperature": 1,
+ "tool_choice": "none",
+ "tools": [],
+ "top_p": 0.95,
+ "max_output_tokens": 60,
+ "previous_response_id": null,
+ "reasoning": {
+  "context": null,
+  "effort": "none",
+  "generate_summary": null,
+  "mode": null,
+  "summary": null
+ },
+ "status": "completed",
+ "text": null,
+ "truncation": "disabled",
+ "usage": {
+  "input_tokens": 40,
+  "input_tokens_details": {
+   "audio_tokens": null,
+   "cached_tokens": 0,
+   "cached_tokens_details": null,
+   "image_tokens": null,
+   "text_tokens": null,
+   "video_tokens": null,
+   "cache_write_tokens": 0,
+   "input_tokens_per_turn": [],
+   "cached_tokens_per_turn": []
+  },
+  "output_tokens": 55,
+  "output_tokens_details": {
+   "audio_tokens": null,
+   "reasoning_tokens": 0,
+   "text_tokens": null,
+   "tool_output_tokens": 0,
+   "output_tokens_per_turn": [],
+   "tool_output_tokens_per_turn": []
+  },
+  "total_tokens": 95,
+  "cost": 3.35e-05
+ },
+ "user": null,
+ "store": false,
+ "background": false,
+ "max_tool_calls": null,
+ "prompt": null,
+ "service_tier": "auto",
+ "top_logprobs": null,
+ "presence_penalty": 0,
+ "frequency_penalty": 0,
+ "kv_transfer_params": null,
+ "ec_transfer_params": null,
+ "input_messages": null,
+ "output_messages": null,
+ "output_text": "The user wants me to pick one color from red, green, blue and reply with JSON only in the form {\"choice\": \"<colour>\"}.\n\nI'll pick one \u2014 let's say blue. The response should be JSON only.{\"choice\": \"blue\"}"
+}

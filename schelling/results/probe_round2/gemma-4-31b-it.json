@@ -1,0 +1,83 @@
+{
+ "id": "resp_7cH66Pk07hcM-qvPEIzF7Zpm-SNrpFlhpnkgYeqMibURoOGLKTu3s-fYOHDBTsN8Zdl12pWO-88AcDnyY0V9xPGCS12U73Uj3EQS9bCBQ_-H_KfJXy8TxBmytM8rVCtdQX0wafNwJ0zu-LjVeRLW4GWuJjqGlRDwCFOWCYw6U_fXzcCOyxaK-KqmfyQlEX25a8vwF98XsFEzFRDNt5x99kp9qpyb2NgpFlcxRXg8yH3jepPJ7spVkOIdSZ50f_EoavfaILt-loX1xPnuSky2pdK-CEII-lPn2oc0BDFwNYjIkI7VNJuHJpy5a1ulYC1RluyN1PqxRD3wlzOPzNrW6MSJz2p4QXRQ80Ix-k-prEJ60ileRBCtZwg9DtWQmp45sJWPxMCNrQqe4FFhDWPVWZC7Mggz6RDsKqrJn2VRWBjmZP5dflebnrq2zMmfjcYHUR49A81LAMpFchaiJh0P5a2lug-f4nFY8e72nqtQghHYjwTDYbSnwltGU7Col_CWUq1qH8BdF6Et-IU-XBNzNxWfgyw=",
+ "created_at": 1794076280,
+ "error": null,
+ "incomplete_details": null,
+ "instructions": null,
+ "metadata": null,
+ "model": "gemma-4-31b-it",
+ "object": "response",
+ "output": [
+  {
+   "id": "msg_8a453f638325fbdc",
+   "content": [
+    {
+     "annotations": [],
+     "text": "```json\n{\"choice\": \"blue\"}\n```",
+     "type": "output_text",
+     "logprobs": null
+    }
+   ],
+   "role": "assistant",
+   "status": "completed",
+   "type": "message",
+   "phase": null
+  }
+ ],
+ "parallel_tool_calls": true,
+ "temperature": 1,
+ "tool_choice": "none",
+ "tools": [],
+ "top_p": 0.95,
+ "max_output_tokens": 60,
+ "previous_response_id": null,
+ "reasoning": {
+  "context": null,
+  "effort": "none",
+  "generate_summary": null,
+  "mode": null,
+  "summary": null
+ },
+ "status": "completed",
+ "text": null,
+ "truncation": "disabled",
+ "usage": {
+  "input_tokens": 41,
+  "input_tokens_details": {
+   "audio_tokens": null,
+   "cached_tokens": 0,
+   "cached_tokens_details": null,
+   "image_tokens": null,
+   "text_tokens": null,
+   "video_tokens": null,
+   "cache_write_tokens": 0,
+   "input_tokens_per_turn": [],
+   "cached_tokens_per_turn": []
+  },
+  "output_tokens": 12,
+  "output_tokens_details": {
+   "audio_tokens": null,
+   "reasoning_tokens": 0,
+   "text_tokens": null,
+   "tool_output_tokens": 0,
+   "output_tokens_per_turn": [],
+   "tool_output_tokens_per_turn": []
+  },
+  "total_tokens": 53,
+  "cost": 7.77e-06
+ },
+ "user": null,
+ "store": false,
+ "background": false,
+ "max_tool_calls": null,
+ "prompt": null,
+ "service_tier": "auto",
+ "top_logprobs": null,
+ "presence_penalty": 0,
+ "frequency_penalty": 0,
+ "kv_transfer_params": null,
+ "ec_transfer_params": null,
+ "input_messages": null,
+ "output_messages": null,
+ "output_text": "```json\n{\"choice\": \"blue\"}\n```"
+}

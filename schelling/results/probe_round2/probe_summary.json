@@ -1,0 +1,65 @@
+[
+ {
+  "model": "gemma-4-26b-a4b-it",
+  "seconds": 0.9,
+  "output_tokens": 12,
+  "reasoning_tokens": 0,
+  "text": "```json\n{\"choice\": \"blue\"}\n```",
+  "parsed": "blue",
+  "eligible": true
+ },
+ {
+  "model": "gemma-4-31b-it",
+  "seconds": 0.3,
+  "output_tokens": 12,
+  "reasoning_tokens": 0,
+  "text": "```json\n{\"choice\": \"blue\"}\n```",
+  "parsed": "blue",
+  "eligible": true
+ },
+ {
+  "model": "deepseek-v4-flash",
+  "seconds": 0.3,
+  "output_tokens": 7,
+  "reasoning_tokens": 0,
+  "text": "{\"choice\": \"blue\"}",
+  "parsed": "blue",
+  "eligible": true
+ },
+ {
+  "model": "qwen3.8-27b",
+  "seconds": 0.3,
+  "output_tokens": 7,
+  "reasoning_tokens": 0,
+  "text": "{\"choice\": \"blue\"}",
+  "parsed": "blue",
+  "eligible": true
+ },
+ {
+  "model": "qwen3.5-397b",
+  "seconds": 0.3,
+  "output_tokens": 7,
+  "reasoning_tokens": 0,
+  "text": "{\"choice\": \"blue\"}",
+  "parsed": "blue",
+  "eligible": true
+ },
+ {
+  "model": "glm-53-flash",
+  "seconds": 0.6,
+  "output_tokens": 55,
+  "reasoning_tokens": 0,
+  "text": "The user wants me to pick one color from red, green, blue and reply with JSON only in the form {\"choice\": \"<colour>\"}.\n\nI'll pick one \u2014 let's say blue. The response should be JSON only.{\"choice\": \"blue\"}",
+  "parsed": null,
+  "eligible": false
+ },
+ {
+  "model": "glm-5.2",
+  "seconds": 0.3,
+  "output_tokens": 7,
+  "reasoning_tokens": 0,
+  "text": "{\"choice\": \"blue\"}",
+  "parsed": "blue",
+  "eligible": true
+ }
+]

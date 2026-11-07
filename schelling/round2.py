@@ -31,7 +31,8 @@ SPEND_CAP_CREDITS = 300.0
 REASONING_MAX_TOKENS = 2000
 
 GEMMA, DEEPSEEK = COPY_MODEL, OTHER_MODEL
-REASONING_MODELS = ["deepseek-v4-flash", "qwen3.8-27b", "glm-53-flash"]
+# Amendment 4a: glm-53-flash failed the probe (reasoning leaks into the reply), glm-5.2 replaces it.
+REASONING_MODELS = ["deepseek-v4-flash", "qwen3.8-27b", "glm-5.2"]
 
 
 def eligible_models() -> list[str]:

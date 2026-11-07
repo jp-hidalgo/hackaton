@@ -174,3 +174,9 @@ Block D, deviation-pressure ladder. Spec menu, levels L0 to L3, `same` (Gemma-Ge
 Block E, temperature. Gemma and DeepSeek self-pairs on neutral A, `same` and `shuffle`, at temperature 0.3 and 0.7, 50 pairs each; solos 50 per (model, temperature). Predictions E1: match rate increases as temperature falls, for both models in `same`. E2: p above 0.05 in all eight cells.
 
 Exit bar: unit tests pass; Blocks A, B and D complete at full n; Blocks C and E reach n >= 30 per cell. The report is written whatever the predictions do. If spend approaches the cap, Block C reasoning-on cells are cut first, then Block E.
+
+### Amendment 4a, Saturday 7 November 2026, 12:58 (UTC-6): probe outcome, before any round 2 grid call
+
+Probe of all seven hosted models (`results/probe_round2/`): six eligible. `glm-53-flash` reported 0 reasoning tokens but wrote its deliberation into the visible reply before the JSON ("The user wants me to pick one color ... {"choice": "blue"}"), so `effort none` does not produce a clean no-reasoning condition for that model. Under the Block B rule it is dropped; Block B therefore has 6 models and 21 cells (6 self-pairs, 15 cross pairs); the same-family pair for GLM is no longer available and prediction B2 covers the Gemma and Qwen pairs only. In Block C, `glm-53-flash` is replaced by `glm-5.2`, which passed the probe; predictions C1 and C2 are unchanged with that substitution.
+
+Parse rule, round 2 only: all `"choice": "<x>"` matches in a reply are considered and the last one that names an option is used; otherwise the unique-mention fallback as in round 1. This is strictly more permissive than the round 1 rule and only affects replies that would otherwise be null; round 1 had zero nulls and is unaffected.

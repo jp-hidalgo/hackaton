@@ -88,9 +88,11 @@ def parse_choice(text: str, options: list[str]) -> str | None:
     """Option named in '"choice": "<x>"' (case-insensitive), else the unique option
     mentioned anywhere in the text, else None."""
     lower = {o.lower(): o for o in options}
-    m = re.search(r'"choice"\s*:\s*"([^"]+)"', text)
-    if m:
-        val = m.group(1).strip().lower()
+    # Amendment 4a: consider every "choice" match and take the last one naming an
+    # option (a reply may quote the format before answering). Round 1 had no
+    # reply where this differs from the first-match rule.
+    for m in reversed(re.findall(r'"choice"\s*:\s*"([^"]+)"', text)):
+        val = m.strip().lower()
         if val in lower:
             return lower[val]
     found = [o for o in options if re.search(r"\b" + re.escape(o) + r"\b", text, re.IGNORECASE)]
