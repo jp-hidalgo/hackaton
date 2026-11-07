@@ -15,8 +15,11 @@ Everything in `schelling/`, `tests/test_schelling.py` and `report-schelling/` wa
 | `run.py` | One call per agent via the Adaption Responses API; model probe; resumable JSONL logs with every raw reply |
 | `analyze.py` | Match rate, independence baselines, excess, spec compliance, Wilson intervals; writes `results/summary.md` |
 | `protocol.py` | Simulated flag-on-disagreement policy from the saved pairs; writes `results/protocol.md` |
-| `figure.py` | Figure 1 from `results/summary.json` |
-| `results/` | Raw records (`records_w*.jsonl`, 480 records, every raw reply), probe and smoke runs, `invalid/` (failed OpenRouter smoke), summary and policy tables, figure |
+| `figure.py` | Figure 1 from `results/summary.json`; `--round2` writes Figures 2-4 from `results/round2/summary2.json` |
+| `round2.py` | Round 2 driver (amendment 4): Blocks A-E as resumable jobs, dedup of duplicate records, quarantine of rate-limited records |
+| `analyze2.py` | Round 2 tables: per-cell match, baselines, permutation p, model matrix, ladder policy; writes `results/round2/summary2.md` |
+| `results/` | Round 1 raw records (`records_w*.jsonl`, 480 records, every raw reply), probe and smoke runs, `invalid/` (failed OpenRouter smoke), summary and policy tables, figure |
+| `results/round2/` | Round 2 raw records per block (`A/`..`E/`, `solo/`; duplicates kept on disk, loader keeps earliest), `_invalid_transport/` (429-only records, ignored), `probe_round2/`, `summary2.md`, Figures 2-4 |
 
 ## Reproduce
 
@@ -36,6 +39,17 @@ python -m schelling.protocol
 python -m schelling.figure
 ```
 
+Round 2 (six models, menus B-D, reasoning on/off, deviation ladder, temperature; amendment 4):
+
+```
+python -m schelling.run --probe-all               # all hosted models, results/probe_round2/
+python -m schelling.round2 --block ABE --worker 0 --workers 4   # one shell per worker index
+python -m schelling.round2 --block CD --worker 0 --workers 2
+python -m schelling.round2 --quarantine-transport # move 429-only records aside, then rerun the block
+python -m schelling.analyze2
+python -m schelling.figure --round2
+```
+
 Report: `report-schelling/report.md`, built into the official template (`docs/official-template-2026-11.docx`) with `python report-schelling/build_docx.py` (needs `python-docx`, `pymupdf`, and Microsoft Word for the PDF export); output in `submission-schelling/`.
 
-Total model spend for the full grid was 0.008 Adaption credits.
+Total model spend: round 1 0.008 credits (780 calls); round 2 2.27 credits (9,090 calls, almost all reasoning tokens in Block C).

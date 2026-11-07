@@ -114,6 +114,20 @@ def add_table(doc: Document, rows: list[list[str]]) -> None:
     ncol = max(len(r) for r in rows)
     table = doc.add_table(rows=len(rows), cols=ncol)
     set_table_borders(table)
+    table.autofit = False
+    # column widths proportional to the longest cell (header weighted), floor 0.45 in, total 6.3 in
+    lens = []
+    for j in range(ncol):
+        body_max = max((len(r[j]) for r in rows[1:] if j < len(r)), default=1)
+        head = len(rows[0][j]) if j < len(rows[0]) else 1
+        lens.append(max(6, min(body_max, 32), min(head, 14)))
+    total = sum(lens)
+    widths = [max(0.45, 6.3 * l / total) for l in lens]
+    scale = 6.3 / sum(widths)
+    widths = [w * scale for w in widths]
+    for j, w in enumerate(widths):
+        for cell in table.columns[j].cells:
+            cell.width = Inches(w)
     for i, row in enumerate(rows):
         for j in range(ncol):
             cell = table.cell(i, j)
@@ -190,9 +204,11 @@ def build() -> None:
             h.paragraph_format.space_before = Pt(8)
             h.paragraph_format.space_after = Pt(2)
         elif line.startswith("!["):
-            m = re.search(r"\]\(([^)]+)\)", line)
-            path = (SRC.parent / m.group(1)).resolve()
-            doc.add_picture(str(path), width=Inches(4.5))
+            m = re.search(r"!\[([^\]]*)\]\(([^)]+)\)", line)
+            path = (SRC.parent / m.group(2)).resolve()
+            # optional width hint in inches after a pipe in the alt text: ![Figure 2|3.4](...)
+            width = float(m.group(1).split("|")[1]) if "|" in m.group(1) else 4.5
+            doc.add_picture(str(path), width=Inches(width))
             doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
         elif line.startswith("> "):
             p = doc.add_paragraph()
