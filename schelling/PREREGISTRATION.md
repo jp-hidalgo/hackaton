@@ -94,7 +94,7 @@ Spend cap USD 20 at OpenRouter list prices, estimated from logged token usage. I
 
 ### Amendment 1, Saturday 7 November 2026, 12:20 (UTC-6): provider and models
 
-Before any grid or solo call. An OpenRouter smoke run was started at 12:03 and hung on the network with no record written; it was killed and no result was seen.
+Before any grid or solo call. An OpenRouter smoke run (one `cross` pair on the spec menu with pair index 99, one solo) was started at 12:03. All nine attempts returned HTTP 401 "API key expired"; no model was reached, no choice was produced, and nothing was spent. The record is kept unaltered in `results/invalid/openrouter_smoke_401.jsonl` and is not used anywhere.
 
 Change: calls go through the Adaption Responses API (`https://api.prod.adaptionlabs.ai/api/v1/responses`, sprint partner credits) instead of OpenRouter. Adaption does not host `gpt-4.1-mini` or `gemini-2.5-flash`, so the two model families change. Everywhere the design above says "gpt" read `COPY_MODEL`, and everywhere it says "gemini" read `OTHER_MODEL`, as set in `schelling/prompts.py`:
 
