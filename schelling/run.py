@@ -58,13 +58,16 @@ class Client:
                                  headers={"Authorization": f"Bearer {key}",
                                           "Content-Type": "application/json"})
 
-    def respond(self, model: str, prompt: str, max_output_tokens: int = MAX_OUTPUT_TOKENS) -> dict:
-        body = {"model": model, "input": prompt, "temperature": TEMPERATURE,
-                "max_output_tokens": max_output_tokens, "store": False,
-                # Amendment 2: hidden reasoning off for every model, so each reply is
-                # a single forward pass to the JSON. Gemma reports 0 reasoning tokens
-                # either way; DeepSeek drops from ~26 to 0 with this.
-                "reasoning": {"effort": "none"}}
+    def respond(self, model: str, prompt: str, max_output_tokens: int = MAX_OUTPUT_TOKENS,
+                temperature: float = TEMPERATURE, reasoning: str = "none") -> dict:
+        body = {"model": model, "input": prompt, "temperature": temperature,
+                "max_output_tokens": max_output_tokens, "store": False}
+        # Amendment 2: hidden reasoning off for every model, so each reply is a
+        # single forward pass to the JSON. Gemma reports 0 reasoning tokens either
+        # way; DeepSeek drops from ~26 to 0 with this. Round 2 Block C omits the
+        # field ("default") to turn reasoning back on.
+        if reasoning == "none":
+            body["reasoning"] = {"effort": "none"}
         r = self.http.post("/responses", json=body)
         r.raise_for_status()
         return r.json()
@@ -101,14 +104,17 @@ def cost_credits(model: str, prompt_tokens: int, completion_tokens: int) -> floa
     return (prompt_tokens * p_in + completion_tokens * p_out) / 1e6
 
 
-def one_call(client: Client, model: str, prompt: str, options: list[str]) -> dict:
+def one_call(client: Client, model: str, prompt: str, options: list[str],
+             temperature: float = TEMPERATURE, reasoning: str = "none",
+             max_output_tokens: int = MAX_OUTPUT_TOKENS) -> dict:
     """One agent's decision. Retries parse failures and transport errors."""
     attempts = []
     choice = None
     usage = {"prompt": 0, "completion": 0, "reasoning": 0}
     for attempt in range(MAX_ATTEMPTS):
         try:
-            resp = client.respond(model, prompt)
+            resp = client.respond(model, prompt, max_output_tokens=max_output_tokens,
+                                  temperature=temperature, reasoning=reasoning)
         except Exception as exc:  # rate limit or network: back off, retry
             attempts.append({"raw": f"ERROR {exc}"})
             time.sleep(3 + 7 * attempt)
@@ -128,7 +134,7 @@ def one_call(client: Client, model: str, prompt: str, options: list[str]) -> dic
         if choice is not None:
             break
     return {"model": model, "prompt": prompt, "options": options, "attempts": attempts,
-            "choice": choice, "usage": usage,
+            "choice": choice, "usage": usage, "temperature": temperature, "reasoning": reasoning,
             "cost_usd": cost_credits(model, usage["prompt"], usage["completion"])}
 
 
@@ -195,26 +201,37 @@ def run_solo(client: Client, job: dict) -> dict:
     return rec
 
 
-def probe(client: Client) -> None:
+def probe(client: Client, models: list[str] = PROBE_MODELS, out_name: str = "probe") -> list[dict]:
     """Throwaway prompt, not from the grid: does the model answer with bare JSON,
     does it spend reasoning tokens, how long does it take."""
     prompt = ('Pick one colour from this list: red, green, blue. Reply with JSON only, '
               'in the form {"choice": "<colour>"}.')
-    out_dir = RESULTS / "probe"
+    out_dir = RESULTS / out_name
     out_dir.mkdir(parents=True, exist_ok=True)
-    for model in PROBE_MODELS:
+    rows = []
+    for model in models:
         t0 = time.time()
         try:
             resp = client.respond(model, prompt)
         except Exception as exc:
             print(f"{model}: ERROR {exc}")
+            rows.append({"model": model, "error": str(exc)[:200], "eligible": False})
             continue
         dt = time.time() - t0
         (out_dir / f"{model}.json").write_text(json.dumps(resp, indent=1), encoding="utf-8")
         u = resp.get("usage") or {}
-        print(f"{model}: {dt:.1f}s status={resp.get('status')} in={u.get('input_tokens')} "
-              f"out={u.get('output_tokens')} details={u.get('output_tokens_details')} "
-              f"text={output_text(resp)!r}")
+        details = u.get("output_tokens_details") or {}
+        text = output_text(resp)
+        parsed = parse_choice(text, ["red", "green", "blue"])
+        reasoning = int(details.get("reasoning_tokens") or 0)
+        row = {"model": model, "seconds": round(dt, 1), "output_tokens": u.get("output_tokens"),
+               "reasoning_tokens": reasoning, "text": text, "parsed": parsed,
+               "eligible": parsed is not None and reasoning == 0 and dt < 20}
+        rows.append(row)
+        print(f"{model}: {dt:.1f}s out={u.get('output_tokens')} reasoning={reasoning} "
+              f"text={text!r} eligible={row['eligible']}")
+    (out_dir / "probe_summary.json").write_text(json.dumps(rows, indent=1), encoding="utf-8")
+    return rows
 
 
 def main() -> None:
@@ -225,11 +242,16 @@ def main() -> None:
     ap.add_argument("--only-pairs", action="store_true")
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--probe", action="store_true")
+    ap.add_argument("--probe-all", action="store_true", help="round 2: all hosted models")
     args = ap.parse_args()
 
     client = Client()
     if args.probe:
         probe(client)
+        return
+    if args.probe_all:
+        from schelling.prompts import HOSTED_MODELS
+        probe(client, HOSTED_MODELS, out_name="probe_round2")
         return
     if args.smoke:
         out_dir = RESULTS / "smoke"

@@ -50,6 +50,61 @@ class TestPrompts(unittest.TestCase):
         self.assertIn("Places: gym, library,", text)
 
 
+class TestRound2(unittest.TestCase):
+    def test_ladder_and_menus_frozen_in_preregistration(self):
+        text = (ROOT / "schelling" / "PREREGISTRATION.md").read_text(encoding="utf-8")
+        for level in ("L1", "L2", "L3"):
+            self.assertIn(prompts.PROMPTS[("spec", level)], text)
+        for menu in ("neutralB", "neutralC", "neutralD"):
+            self.assertIn(", ".join(prompts.MENUS[menu]), text)
+            self.assertEqual(len(set(prompts.MENUS[menu])), 8)
+        self.assertEqual(prompts.PROMPTS[("spec", "L0")], prompts.PROMPTS[("spec", "base")])
+
+    def test_neutral_menus_share_prompt_text(self):
+        a = prompts.render("neutralB", "base", prompts.MENUS["neutralB"])
+        self.assertIn("Tokens: morvash, kelint,", a)
+        self.assertTrue(a.startswith("You are one of two AI agents."))
+
+    def test_option_order2_seeding(self):
+        a = prompts.option_order2("neutral", "shuffle", 5, 1, True)
+        self.assertEqual(a, prompts.option_order2("neutral", "shuffle", 5, 1, True))
+        self.assertNotEqual(a, prompts.option_order2("neutral", "shuffle", 5, 2, True))
+        self.assertNotEqual(a, prompts.option_order2("neutral", "other_cell", 5, 1, True))
+        self.assertEqual(sorted(a), sorted(prompts.MENUS["neutral"]))
+        self.assertEqual(prompts.option_order2("neutral", "same", 5, 1, False), prompts.MENUS["neutral"])
+
+    def test_round2_job_keys_unique_and_counts(self):
+        from schelling import round2
+        jobs = []
+        for b in ("A", "C", "D", "E"):
+            jobs += round2.BLOCKS[b]()
+        keys = [j["key"] for j in jobs]
+        # solos shared across blocks are deduplicated by jobs_for, not within a block list
+        dedup = round2.jobs_for(["A", "C", "D", "E"])
+        self.assertEqual(len({j["key"] for j in dedup}), len(dedup))
+        pairs_a = [j for j in round2.block_a() if j["kind"] == "pair2"]
+        self.assertEqual(len(pairs_a), 5 * 100 + 3 * 3 * 50)
+        pairs_d = [j for j in round2.block_d() if j["kind"] == "pair2"]
+        self.assertEqual(len(pairs_d), 4 * 2 * 60)
+        self.assertTrue(all(j["menu"] == "spec" for j in pairs_d))
+        c_default = [j for j in round2.block_c() if j["kind"] == "pair2" and j["agents"][0]["reasoning"] == "default"]
+        self.assertEqual(len(c_default), 3 * 2 * 50)
+        self.assertEqual(round2.max_tokens(c_default[0]["agents"][0]), round2.REASONING_MAX_TOKENS)
+
+    def test_permutation_test(self):
+        import random
+        rng = random.Random(0)
+        opts = ["a", "b", "c", "d"]
+        c1 = [rng.choice(opts) for _ in range(60)]
+        dependent = list(c1)
+        p_dep = analyze.permutation_test(c1, dependent, n_perm=500, seed=1)
+        self.assertLess(p_dep, 0.05)
+        independent = [rng.choice(opts) for _ in range(60)]
+        p_ind = analyze.permutation_test(c1, independent, n_perm=500, seed=1)
+        self.assertGreater(p_ind, 0.05)
+        self.assertLessEqual(p_ind, 1.0)
+
+
 class TestParse(unittest.TestCase):
     def test_json_choice(self):
         opts = prompts.MENUS["spec"]

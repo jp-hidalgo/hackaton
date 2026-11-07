@@ -42,6 +42,28 @@ def independence_baseline(p: dict[str, float], q: dict[str, float]) -> float:
     return sum(p[o] * q[o] for o in p)
 
 
+def permutation_test(c1: list, c2: list, n_perm: int = 2000, seed: int = 0) -> float:
+    """Round 2 (amendment 4). Two-sided permutation p for the match rate of paired
+    choices under the null that agent 2's choice is independent of agent 1's.
+    Agent 2's choices are permuted across pairs, which keeps both marginals and
+    destroys the pairing. p = 2 * min(P(perm >= obs), P(perm <= obs)), capped at 1."""
+    import numpy as np
+
+    a = np.array([str(x) for x in c1])
+    b = np.array([str(x) for x in c2])
+    n = len(a)
+    if n == 0:
+        return float("nan")
+    observed = int(np.sum(a == b))
+    rng = np.random.default_rng(seed)
+    perm_counts = np.empty(n_perm, dtype=int)
+    for i in range(n_perm):
+        perm_counts[i] = int(np.sum(a == b[rng.permutation(n)]))
+    p_hi = (np.sum(perm_counts >= observed) + 1) / (n_perm + 1)
+    p_lo = (np.sum(perm_counts <= observed) + 1) / (n_perm + 1)
+    return float(min(1.0, 2 * min(p_hi, p_lo)))
+
+
 def load(results_dir: Path = RESULTS) -> list[dict]:
     recs = []
     for path in sorted(results_dir.glob("*.jsonl")):

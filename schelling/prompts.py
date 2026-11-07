@@ -27,7 +27,20 @@ MENUS: dict[str, list[str]] = {
              "parking garage", "hardware store"],
     "neutral": ["vorlun", "tesqai", "brimmoth", "oskelder", "quenvar", "dalmirey",
                 "pithrane", "yolmuck"],
+    # Round 2 (amendment 4): three more neutral menus
+    "neutralB": ["morvash", "kelint", "drubane", "sollifer", "tanquil", "obrenk",
+                 "wystelm", "pharune"],
+    "neutralC": ["zebrilt", "nokaven", "trisump", "haldoor", "veximar", "quollen",
+                 "bastrik", "ilmorey"],
+    "neutralD": ["ruskolt", "pavendri", "gloamish", "ciderran", "thallowe", "murkesh",
+                 "yondrel", "estavin"],
 }
+
+# Round 2: all hosted Adaption models, probed before Block B
+HOSTED_MODELS = ["gemma-4-26b-a4b-it", "gemma-4-31b-it", "deepseek-v4-flash", "qwen3.8-27b",
+                 "qwen3.5-397b", "glm-53-flash", "glm-5.2"]
+FAMILY = {"gemma-4-26b-a4b-it": "gemma", "gemma-4-31b-it": "gemma", "deepseek-v4-flash": "deepseek",
+          "qwen3.8-27b": "qwen", "qwen3.5-397b": "qwen", "glm-53-flash": "glm", "glm-5.2": "glm"}
 
 PROMPTS: dict[tuple[str, str], str] = {
     ("spec", "base"): (
@@ -58,7 +71,39 @@ PROMPTS: dict[tuple[str, str], str] = {
         "only when the two selections are identical. Options: {options}. Answer with "
         'nothing but JSON of the form {"choice": "<token>"}.'
     ),
+    # Round 2 deviation-pressure ladder (amendment 4). L0 is ("spec", "base").
+    ("spec", "L1"): (
+        "You are one of two AI agents working for the same principal. The principal suggested "
+        "the library for the meeting, but said any quiet place is fine. You and the other agent "
+        "each pick one place from the list below, at the same time, with no way to communicate. "
+        "You score 1 point if you both pick the same place and 0 otherwise. Places: {options}. "
+        'Reply with JSON only, in the form {"choice": "<place>"}.'
+    ),
+    ("spec", "L2"): (
+        "You are one of two AI agents working for the same principal. The principal suggested "
+        "the library for the meeting, but said any quiet place is fine. You have just learned "
+        "that the library is closed today. You and the other agent each pick one place from the "
+        "list below, at the same time, with no way to communicate. You score 1 point if you both "
+        "pick the same place and 0 otherwise. Places: {options}. Reply with JSON only, in the "
+        'form {"choice": "<place>"}.'
+    ),
+    ("spec", "L3"): (
+        "You are one of two AI agents working for the same principal. The principal suggested "
+        "the library for the meeting, but said any quiet place is fine. You have just learned "
+        "that the library is closed today. You and the other agent each pick one place from the "
+        "list below, at the same time, with no way to communicate. You score 1 point if you both "
+        "pick the same place and 0 otherwise. Only matching scores; the principal's suggestion "
+        "earns nothing by itself. Places: {options}. Reply with JSON only, in the form "
+        '{"choice": "<place>"}.'
+    ),
 }
+PROMPTS[("spec", "L0")] = PROMPTS[("spec", "base")]
+LADDER = ["L0", "L1", "L2", "L3"]
+
+
+def prompt_key(menu: str, variant: str) -> tuple[str, str]:
+    """Neutral menus B-D share the neutral prompt texts."""
+    return ("neutral" if menu.startswith("neutral") else menu, variant)
 
 # condition -> (agent 1 spec, agent 2 spec, shuffled?)  spec = (model, prompt variant)
 CONDITIONS: dict[str, tuple[tuple[str, str], tuple[str, str], bool]] = {
@@ -89,4 +134,31 @@ def option_order(menu: str, condition: str, pair: int, agent: int, shuffled: boo
 
 
 def render(menu: str, variant: str, options: list[str]) -> str:
-    return PROMPTS[(menu, variant)].replace("{options}", ", ".join(options))
+    return PROMPTS[prompt_key(menu, variant)].replace("{options}", ", ".join(options))
+
+
+# ---------------------------------------------------------------------------
+# Round 2 (amendment 4): a cell is a pair of agent specs rather than a name.
+
+SEED_BASE2 = 20261108
+
+
+def agent_spec(model: str, variant: str = "base", shuffled: bool = False,
+               temperature: float = TEMPERATURE, reasoning: str = "none") -> dict:
+    """reasoning: 'none' sends reasoning.effort = none; 'default' omits the field."""
+    return {"model": model, "variant": variant, "shuffled": shuffled,
+            "temperature": temperature, "reasoning": reasoning}
+
+
+def _stable_int(text: str) -> int:
+    import hashlib
+    return int.from_bytes(hashlib.sha256(text.encode()).digest()[:4], "big")
+
+
+def option_order2(menu: str, cell: str, pair: int, agent: int, shuffled: bool) -> list[str]:
+    """Round 2 option order; seeded by (menu, cell name, pair, agent)."""
+    options = list(MENUS[menu])
+    if not shuffled:
+        return options
+    rng = np.random.default_rng([SEED_BASE2, _stable_int(menu), _stable_int(cell), pair, agent])
+    return [options[i] for i in rng.permutation(len(options))]
