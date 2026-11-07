@@ -118,3 +118,9 @@ Before any grid or solo call. Probe (`results/probe/`, throwaway colour prompt, 
 | glm-53-flash | 0.5 s | 55 | 47 | yes |
 
 Under the amendment 1 rule the cheapest eligible Gemma is `gemma-4-26b-a4b-it`, so `COPY_MODEL = gemma-4-26b-a4b-it` (not the 31b named provisionally above). No non-Gemma model passed the zero-reasoning criterion as-is. A second throwaway test on `deepseek-v4-flash` found that the request field `"reasoning": {"effort": "none"}` yields 0 reasoning tokens and clean JSON (`effort: minimal`, `enabled: false` and `thinking: disabled` did not). Rule applied: `OTHER_MODEL = deepseek-v4-flash` with `reasoning.effort = none` on every call, to both models, so each reply is a single pass to the JSON. The fallback chain was not needed. Smoke run follows; the grid starts only if the smoke pair and solo parse.
+
+### Amendment 3, Saturday 7 November 2026, 12:25 (UTC-6): post hoc analysis, after the grid
+
+Grid finished 12:18: 300 pairs, 180 solos, 780 calls, 0 null choices, 0 retries, 0.008 credits. After seeing the summary tables, one analysis was added that uses only the saved logs and makes no new calls: in the two shuffled neutral cells, the fraction of choices that were whatever option was listed first to that agent, and the rate of choosing `vorlun` split by whether `vorlun` was listed first. It is labelled post hoc in `results/summary.md` and in the report. No cell, prompt or model was added or changed after the grid.
+
+Prediction outcomes are recorded in the report, not here.

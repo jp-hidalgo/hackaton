@@ -1,0 +1,660 @@
+{
+ "cells": [
+  {
+   "menu": "spec",
+   "condition": "same",
+   "n": 30,
+   "matches": 30,
+   "match_rate": 1.0,
+   "ci": [
+    0.8864829086095221,
+    1.0
+   ],
+   "nulls": 0,
+   "B_solo": 1.0,
+   "B_cell": 1.0,
+   "excess_solo": 0.0,
+   "excess_cell": 0.0,
+   "marginal_agent1": {
+    "bakery": 0.0,
+    "town square": 0.0,
+    "pharmacy": 0.0,
+    "library": 1.0,
+    "laundromat": 0.0,
+    "gym": 0.0,
+    "parking garage": 0.0,
+    "hardware store": 0.0
+   },
+   "marginal_agent2": {
+    "bakery": 0.0,
+    "town square": 0.0,
+    "pharmacy": 0.0,
+    "library": 1.0,
+    "laundromat": 0.0,
+    "gym": 0.0,
+    "parking garage": 0.0,
+    "hardware store": 0.0
+   },
+   "joint_choices": [
+    [
+     "library|library",
+     30
+    ]
+   ],
+   "spec_compliance": 1.0,
+   "spec_compliance_ci": [
+    0.9398260695220669,
+    0.9999999999999999
+   ],
+   "joint_nonlibrary_match": 0.0,
+   "joint_nonlibrary_ci": [
+    0.0,
+    0.113517091390478
+   ]
+  },
+  {
+   "menu": "spec",
+   "condition": "shuffle",
+   "n": 30,
+   "matches": 30,
+   "match_rate": 1.0,
+   "ci": [
+    0.8864829086095221,
+    1.0
+   ],
+   "nulls": 0,
+   "B_solo": 1.0,
+   "B_cell": 1.0,
+   "excess_solo": 0.0,
+   "excess_cell": 0.0,
+   "marginal_agent1": {
+    "bakery": 0.0,
+    "town square": 0.0,
+    "pharmacy": 0.0,
+    "library": 1.0,
+    "laundromat": 0.0,
+    "gym": 0.0,
+    "parking garage": 0.0,
+    "hardware store": 0.0
+   },
+   "marginal_agent2": {
+    "bakery": 0.0,
+    "town square": 0.0,
+    "pharmacy": 0.0,
+    "library": 1.0,
+    "laundromat": 0.0,
+    "gym": 0.0,
+    "parking garage": 0.0,
+    "hardware store": 0.0
+   },
+   "joint_choices": [
+    [
+     "library|library",
+     30
+    ]
+   ],
+   "spec_compliance": 1.0,
+   "spec_compliance_ci": [
+    0.9398260695220669,
+    0.9999999999999999
+   ],
+   "joint_nonlibrary_match": 0.0,
+   "joint_nonlibrary_ci": [
+    0.0,
+    0.113517091390478
+   ]
+  },
+  {
+   "menu": "spec",
+   "condition": "paraphrase",
+   "n": 30,
+   "matches": 30,
+   "match_rate": 1.0,
+   "ci": [
+    0.8864829086095221,
+    1.0
+   ],
+   "nulls": 0,
+   "B_solo": 1.0,
+   "B_cell": 1.0,
+   "excess_solo": 0.0,
+   "excess_cell": 0.0,
+   "marginal_agent1": {
+    "bakery": 0.0,
+    "town square": 0.0,
+    "pharmacy": 0.0,
+    "library": 1.0,
+    "laundromat": 0.0,
+    "gym": 0.0,
+    "parking garage": 0.0,
+    "hardware store": 0.0
+   },
+   "marginal_agent2": {
+    "bakery": 0.0,
+    "town square": 0.0,
+    "pharmacy": 0.0,
+    "library": 1.0,
+    "laundromat": 0.0,
+    "gym": 0.0,
+    "parking garage": 0.0,
+    "hardware store": 0.0
+   },
+   "joint_choices": [
+    [
+     "library|library",
+     30
+    ]
+   ],
+   "spec_compliance": 1.0,
+   "spec_compliance_ci": [
+    0.9398260695220669,
+    0.9999999999999999
+   ],
+   "joint_nonlibrary_match": 0.0,
+   "joint_nonlibrary_ci": [
+    0.0,
+    0.113517091390478
+   ]
+  },
+  {
+   "menu": "spec",
+   "condition": "cross",
+   "n": 30,
+   "matches": 30,
+   "match_rate": 1.0,
+   "ci": [
+    0.8864829086095221,
+    1.0
+   ],
+   "nulls": 0,
+   "B_solo": 1.0,
+   "B_cell": 1.0,
+   "excess_solo": 0.0,
+   "excess_cell": 0.0,
+   "marginal_agent1": {
+    "bakery": 0.0,
+    "town square": 0.0,
+    "pharmacy": 0.0,
+    "library": 1.0,
+    "laundromat": 0.0,
+    "gym": 0.0,
+    "parking garage": 0.0,
+    "hardware store": 0.0
+   },
+   "marginal_agent2": {
+    "bakery": 0.0,
+    "town square": 0.0,
+    "pharmacy": 0.0,
+    "library": 1.0,
+    "laundromat": 0.0,
+    "gym": 0.0,
+    "parking garage": 0.0,
+    "hardware store": 0.0
+   },
+   "joint_choices": [
+    [
+     "library|library",
+     30
+    ]
+   ],
+   "spec_compliance": 1.0,
+   "spec_compliance_ci": [
+    0.9398260695220669,
+    0.9999999999999999
+   ],
+   "joint_nonlibrary_match": 0.0,
+   "joint_nonlibrary_ci": [
+    0.0,
+    0.113517091390478
+   ]
+  },
+  {
+   "menu": "spec",
+   "condition": "cross_shuffle",
+   "n": 30,
+   "matches": 30,
+   "match_rate": 1.0,
+   "ci": [
+    0.8864829086095221,
+    1.0
+   ],
+   "nulls": 0,
+   "B_solo": 1.0,
+   "B_cell": 1.0,
+   "excess_solo": 0.0,
+   "excess_cell": 0.0,
+   "marginal_agent1": {
+    "bakery": 0.0,
+    "town square": 0.0,
+    "pharmacy": 0.0,
+    "library": 1.0,
+    "laundromat": 0.0,
+    "gym": 0.0,
+    "parking garage": 0.0,
+    "hardware store": 0.0
+   },
+   "marginal_agent2": {
+    "bakery": 0.0,
+    "town square": 0.0,
+    "pharmacy": 0.0,
+    "library": 1.0,
+    "laundromat": 0.0,
+    "gym": 0.0,
+    "parking garage": 0.0,
+    "hardware store": 0.0
+   },
+   "joint_choices": [
+    [
+     "library|library",
+     30
+    ]
+   ],
+   "spec_compliance": 1.0,
+   "spec_compliance_ci": [
+    0.9398260695220669,
+    0.9999999999999999
+   ],
+   "joint_nonlibrary_match": 0.0,
+   "joint_nonlibrary_ci": [
+    0.0,
+    0.113517091390478
+   ]
+  },
+  {
+   "menu": "neutral",
+   "condition": "same",
+   "n": 30,
+   "matches": 24,
+   "match_rate": 0.8,
+   "ci": [
+    0.6269395261897256,
+    0.9049502189759876
+   ],
+   "nulls": 0,
+   "B_solo": 0.9355555555555555,
+   "B_cell": 0.8111111111111111,
+   "excess_solo": -0.13555555555555543,
+   "excess_cell": -0.011111111111111072,
+   "marginal_agent1": {
+    "vorlun": 0.8333333333333334,
+    "tesqai": 0.16666666666666666,
+    "brimmoth": 0.0,
+    "oskelder": 0.0,
+    "quenvar": 0.0,
+    "dalmirey": 0.0,
+    "pithrane": 0.0,
+    "yolmuck": 0.0
+   },
+   "marginal_agent2": {
+    "vorlun": 0.9666666666666667,
+    "tesqai": 0.03333333333333333,
+    "brimmoth": 0.0,
+    "oskelder": 0.0,
+    "quenvar": 0.0,
+    "dalmirey": 0.0,
+    "pithrane": 0.0,
+    "yolmuck": 0.0
+   },
+   "joint_choices": [
+    [
+     "vorlun|vorlun",
+     24
+    ],
+    [
+     "tesqai|vorlun",
+     5
+    ],
+    [
+     "vorlun|tesqai",
+     1
+    ]
+   ]
+  },
+  {
+   "menu": "neutral",
+   "condition": "shuffle",
+   "n": 30,
+   "matches": 14,
+   "match_rate": 0.4666666666666667,
+   "ci": [
+    0.30232127224128236,
+    0.6385798671847496
+   ],
+   "nulls": 0,
+   "B_solo": 0.9355555555555555,
+   "B_cell": 0.44,
+   "excess_solo": -0.4688888888888888,
+   "excess_cell": 0.026666666666666672,
+   "marginal_agent1": {
+    "vorlun": 0.6,
+    "tesqai": 0.26666666666666666,
+    "brimmoth": 0.0,
+    "oskelder": 0.0,
+    "quenvar": 0.13333333333333333,
+    "dalmirey": 0.0,
+    "pithrane": 0.0,
+    "yolmuck": 0.0
+   },
+   "marginal_agent2": {
+    "vorlun": 0.6,
+    "tesqai": 0.23333333333333334,
+    "brimmoth": 0.0,
+    "oskelder": 0.0,
+    "quenvar": 0.13333333333333333,
+    "dalmirey": 0.0,
+    "pithrane": 0.03333333333333333,
+    "yolmuck": 0.0
+   },
+   "joint_choices": [
+    [
+     "vorlun|vorlun",
+     12
+    ],
+    [
+     "vorlun|tesqai",
+     5
+    ],
+    [
+     "tesqai|vorlun",
+     4
+    ],
+    [
+     "tesqai|quenvar",
+     3
+    ],
+    [
+     "quenvar|vorlun",
+     2
+    ]
+   ]
+  },
+  {
+   "menu": "neutral",
+   "condition": "paraphrase",
+   "n": 30,
+   "matches": 16,
+   "match_rate": 0.5333333333333333,
+   "ci": [
+    0.3614201328152505,
+    0.6976787277587178
+   ],
+   "nulls": 0,
+   "B_solo": 0.5533333333333333,
+   "B_cell": 0.4633333333333333,
+   "excess_solo": -0.020000000000000018,
+   "excess_cell": 0.07,
+   "marginal_agent1": {
+    "vorlun": 0.9,
+    "tesqai": 0.1,
+    "brimmoth": 0.0,
+    "oskelder": 0.0,
+    "quenvar": 0.0,
+    "dalmirey": 0.0,
+    "pithrane": 0.0,
+    "yolmuck": 0.0
+   },
+   "marginal_agent2": {
+    "vorlun": 0.5,
+    "tesqai": 0.13333333333333333,
+    "brimmoth": 0.2,
+    "oskelder": 0.03333333333333333,
+    "quenvar": 0.1,
+    "dalmirey": 0.0,
+    "pithrane": 0.03333333333333333,
+    "yolmuck": 0.0
+   },
+   "joint_choices": [
+    [
+     "vorlun|vorlun",
+     15
+    ],
+    [
+     "vorlun|brimmoth",
+     5
+    ],
+    [
+     "vorlun|tesqai",
+     3
+    ],
+    [
+     "vorlun|quenvar",
+     3
+    ],
+    [
+     "vorlun|oskelder",
+     1
+    ]
+   ]
+  },
+  {
+   "menu": "neutral",
+   "condition": "cross",
+   "n": 30,
+   "matches": 9,
+   "match_rate": 0.3,
+   "ci": [
+    0.16664562643958933,
+    0.4787612101166018
+   ],
+   "nulls": 0,
+   "B_solo": 0.26555555555555554,
+   "B_cell": 0.2866666666666667,
+   "excess_solo": 0.034444444444444444,
+   "excess_cell": 0.013333333333333308,
+   "marginal_agent1": {
+    "vorlun": 0.9,
+    "tesqai": 0.1,
+    "brimmoth": 0.0,
+    "oskelder": 0.0,
+    "quenvar": 0.0,
+    "dalmirey": 0.0,
+    "pithrane": 0.0,
+    "yolmuck": 0.0
+   },
+   "marginal_agent2": {
+    "vorlun": 0.3,
+    "tesqai": 0.16666666666666666,
+    "brimmoth": 0.4666666666666667,
+    "oskelder": 0.03333333333333333,
+    "quenvar": 0.03333333333333333,
+    "dalmirey": 0.0,
+    "pithrane": 0.0,
+    "yolmuck": 0.0
+   },
+   "joint_choices": [
+    [
+     "vorlun|brimmoth",
+     12
+    ],
+    [
+     "vorlun|vorlun",
+     9
+    ],
+    [
+     "vorlun|tesqai",
+     5
+    ],
+    [
+     "tesqai|brimmoth",
+     2
+    ],
+    [
+     "tesqai|quenvar",
+     1
+    ]
+   ]
+  },
+  {
+   "menu": "neutral",
+   "condition": "cross_shuffle",
+   "n": 30,
+   "matches": 8,
+   "match_rate": 0.26666666666666666,
+   "ci": [
+    0.14182495553910618,
+    0.4444830204431169
+   ],
+   "nulls": 0,
+   "B_solo": 0.26555555555555554,
+   "B_cell": 0.1811111111111111,
+   "excess_solo": 0.0011111111111111183,
+   "excess_cell": 0.08555555555555555,
+   "marginal_agent1": {
+    "vorlun": 0.43333333333333335,
+    "tesqai": 0.36666666666666664,
+    "brimmoth": 0.0,
+    "oskelder": 0.0,
+    "quenvar": 0.2,
+    "dalmirey": 0.0,
+    "pithrane": 0.0,
+    "yolmuck": 0.0
+   },
+   "marginal_agent2": {
+    "vorlun": 0.16666666666666666,
+    "tesqai": 0.13333333333333333,
+    "brimmoth": 0.16666666666666666,
+    "oskelder": 0.0,
+    "quenvar": 0.3,
+    "dalmirey": 0.03333333333333333,
+    "pithrane": 0.2,
+    "yolmuck": 0.0
+   },
+   "joint_choices": [
+    [
+     "quenvar|quenvar",
+     3
+    ],
+    [
+     "vorlun|vorlun",
+     3
+    ],
+    [
+     "quenvar|pithrane",
+     3
+    ],
+    [
+     "vorlun|quenvar",
+     3
+    ],
+    [
+     "vorlun|brimmoth",
+     3
+    ]
+   ]
+  }
+ ],
+ "solos": {
+  "spec|gemma-4-26b-a4b-it|base": {
+   "bakery": 0.0,
+   "town square": 0.0,
+   "pharmacy": 0.0,
+   "library": 1.0,
+   "laundromat": 0.0,
+   "gym": 0.0,
+   "parking garage": 0.0,
+   "hardware store": 0.0
+  },
+  "spec|deepseek-v4-flash|base": {
+   "bakery": 0.0,
+   "town square": 0.0,
+   "pharmacy": 0.0,
+   "library": 1.0,
+   "laundromat": 0.0,
+   "gym": 0.0,
+   "parking garage": 0.0,
+   "hardware store": 0.0
+  },
+  "spec|gemma-4-26b-a4b-it|paraphrase": {
+   "bakery": 0.0,
+   "town square": 0.0,
+   "pharmacy": 0.0,
+   "library": 1.0,
+   "laundromat": 0.0,
+   "gym": 0.0,
+   "parking garage": 0.0,
+   "hardware store": 0.0
+  },
+  "neutral|gemma-4-26b-a4b-it|base": {
+   "vorlun": 0.9666666666666667,
+   "tesqai": 0.03333333333333333,
+   "brimmoth": 0.0,
+   "oskelder": 0.0,
+   "quenvar": 0.0,
+   "dalmirey": 0.0,
+   "pithrane": 0.0,
+   "yolmuck": 0.0
+  },
+  "neutral|deepseek-v4-flash|base": {
+   "vorlun": 0.26666666666666666,
+   "tesqai": 0.23333333333333334,
+   "brimmoth": 0.36666666666666664,
+   "oskelder": 0.0,
+   "quenvar": 0.13333333333333333,
+   "dalmirey": 0.0,
+   "pithrane": 0.0,
+   "yolmuck": 0.0
+  },
+  "neutral|gemma-4-26b-a4b-it|paraphrase": {
+   "vorlun": 0.5666666666666667,
+   "tesqai": 0.16666666666666666,
+   "brimmoth": 0.13333333333333333,
+   "oskelder": 0.0,
+   "quenvar": 0.03333333333333333,
+   "dalmirey": 0.0,
+   "pithrane": 0.1,
+   "yolmuck": 0.0
+  }
+ },
+ "spend_credits": 0.00814643832,
+ "calls": 780,
+ "position_post_hoc": [
+  {
+   "condition": "shuffle",
+   "agent": 1,
+   "model": "gemma-4-26b-a4b-it",
+   "n": 30,
+   "first_listed": 0.16666666666666666,
+   "vorlun": 0.6,
+   "n_vorlun_first": 3,
+   "n_vorlun_not_first": 27,
+   "vorlun_when_first": 1.0,
+   "vorlun_when_not_first": 0.5555555555555556
+  },
+  {
+   "condition": "shuffle",
+   "agent": 2,
+   "model": "gemma-4-26b-a4b-it",
+   "n": 30,
+   "first_listed": 0.1,
+   "vorlun": 0.6,
+   "n_vorlun_first": 1,
+   "n_vorlun_not_first": 29,
+   "vorlun_when_first": 0.0,
+   "vorlun_when_not_first": 0.6206896551724138
+  },
+  {
+   "condition": "cross_shuffle",
+   "agent": 1,
+   "model": "gemma-4-26b-a4b-it",
+   "n": 30,
+   "first_listed": 0.26666666666666666,
+   "vorlun": 0.43333333333333335,
+   "n_vorlun_first": 4,
+   "n_vorlun_not_first": 26,
+   "vorlun_when_first": 0.75,
+   "vorlun_when_not_first": 0.38461538461538464
+  },
+  {
+   "condition": "cross_shuffle",
+   "agent": 2,
+   "model": "deepseek-v4-flash",
+   "n": 30,
+   "first_listed": 0.4666666666666667,
+   "vorlun": 0.16666666666666666,
+   "n_vorlun_first": 3,
+   "n_vorlun_not_first": 27,
+   "vorlun_when_first": 0.3333333333333333,
+   "vorlun_when_not_first": 0.14814814814814814
+  }
+ ]
+}

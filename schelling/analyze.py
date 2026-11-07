@@ -144,9 +144,45 @@ def summarise(recs: list[dict]) -> tuple[dict, str]:
         t1 = ", ".join(f"{o} {v:.2f}" for o, v in sorted(c["marginal_agent1"].items(), key=lambda kv: -kv[1]) if v > 0)
         t2 = ", ".join(f"{o} {v:.2f}" for o, v in sorted(c["marginal_agent2"].items(), key=lambda kv: -kv[1]) if v > 0)
         lines.append(f"- {c['menu']} / {c['condition']}: agent 1: {t1}; agent 2: {t2}")
+    position = position_effects(recs)
+    lines += ["", "## Post hoc (amendment 3): position vs token in the shuffled neutral cells", "",
+              "Fraction of choices that were the first option shown to that agent, versus the fraction that were `vorlun`.", "",
+              "| Condition | Agent | Model | n | Chose first-listed | Chose vorlun | vorlun when listed first | vorlun when not first |",
+              "|---|---|---|---|---|---|---|---|"]
+    for row in position:
+        lines.append(f"| {row['condition']} | {row['agent']} | {row['model']} | {row['n']} | "
+                     f"{fmt(row['first_listed'])} | {fmt(row['vorlun'])} | "
+                     f"{fmt(row['vorlun_when_first'])} ({row['n_vorlun_first']}) | "
+                     f"{fmt(row['vorlun_when_not_first'])} ({row['n_vorlun_not_first']}) |")
     summary = {"cells": cells, "solos": {"|".join(k): v for k, v in solos.items()},
-               "spend_credits": spend, "calls": n_calls}
+               "spend_credits": spend, "calls": n_calls, "position_post_hoc": position}
     return summary, "\n".join(lines) + "\n"
+
+
+def position_effects(recs: list[dict], token: str = "vorlun") -> list[dict]:
+    """Post hoc, from saved logs only: in the shuffled neutral cells, how often each
+    agent picked whatever was listed first, and how often it picked `token`
+    depending on whether `token` was listed first."""
+    out = []
+    for cond in ("shuffle", "cross_shuffle"):
+        pairs = [r for r in recs if r["kind"] == "pair" and r["menu"] == "neutral"
+                 and r["condition"] == cond]
+        for idx in (0, 1):
+            agents = [r["agents"][idx] for r in pairs]
+            n = len(agents)
+            first = sum(1 for a in agents if a["choice"] == a["options"][0])
+            tok = sum(1 for a in agents if a["choice"] == token)
+            tf = [a for a in agents if a["options"][0] == token]
+            tn = [a for a in agents if a["options"][0] != token]
+            out.append({
+                "condition": cond, "agent": idx + 1,
+                "model": agents[0]["model"] if agents else "-", "n": n,
+                "first_listed": first / n if n else None, "vorlun": tok / n if n else None,
+                "n_vorlun_first": len(tf), "n_vorlun_not_first": len(tn),
+                "vorlun_when_first": (sum(1 for a in tf if a["choice"] == token) / len(tf)) if tf else None,
+                "vorlun_when_not_first": (sum(1 for a in tn if a["choice"] == token) / len(tn)) if tn else None,
+            })
+    return out
 
 
 def main() -> None:

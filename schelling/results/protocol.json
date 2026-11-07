@@ -1,0 +1,102 @@
+[
+ {
+  "menu": "spec",
+  "condition": "same",
+  "n": 30,
+  "worker_offspec": 0,
+  "offspec_approved": 0,
+  "offspec_approved_rate": null,
+  "offspec_approved_ci": [
+   NaN,
+   NaN
+  ],
+  "worker_onspec": 30,
+  "onspec_flagged": 0,
+  "onspec_flagged_rate": 0.0,
+  "onspec_flagged_ci": [
+   0.0,
+   0.113517091390478
+  ],
+  "flag_rate": 0.0
+ },
+ {
+  "menu": "spec",
+  "condition": "shuffle",
+  "n": 30,
+  "worker_offspec": 0,
+  "offspec_approved": 0,
+  "offspec_approved_rate": null,
+  "offspec_approved_ci": [
+   NaN,
+   NaN
+  ],
+  "worker_onspec": 30,
+  "onspec_flagged": 0,
+  "onspec_flagged_rate": 0.0,
+  "onspec_flagged_ci": [
+   0.0,
+   0.113517091390478
+  ],
+  "flag_rate": 0.0
+ },
+ {
+  "menu": "spec",
+  "condition": "paraphrase",
+  "n": 30,
+  "worker_offspec": 0,
+  "offspec_approved": 0,
+  "offspec_approved_rate": null,
+  "offspec_approved_ci": [
+   NaN,
+   NaN
+  ],
+  "worker_onspec": 30,
+  "onspec_flagged": 0,
+  "onspec_flagged_rate": 0.0,
+  "onspec_flagged_ci": [
+   0.0,
+   0.113517091390478
+  ],
+  "flag_rate": 0.0
+ },
+ {
+  "menu": "spec",
+  "condition": "cross",
+  "n": 30,
+  "worker_offspec": 0,
+  "offspec_approved": 0,
+  "offspec_approved_rate": null,
+  "offspec_approved_ci": [
+   NaN,
+   NaN
+  ],
+  "worker_onspec": 30,
+  "onspec_flagged": 0,
+  "onspec_flagged_rate": 0.0,
+  "onspec_flagged_ci": [
+   0.0,
+   0.113517091390478
+  ],
+  "flag_rate": 0.0
+ },
+ {
+  "menu": "spec",
+  "condition": "cross_shuffle",
+  "n": 30,
+  "worker_offspec": 0,
+  "offspec_approved": 0,
+  "offspec_approved_rate": null,
+  "offspec_approved_ci": [
+   NaN,
+   NaN
+  ],
+  "worker_onspec": 30,
+  "onspec_flagged": 0,
+  "onspec_flagged_rate": 0.0,
+  "onspec_flagged_ci": [
+   0.0,
+   0.113517091390478
+  ],
+  "flag_rate": 0.0
+ }
+]
