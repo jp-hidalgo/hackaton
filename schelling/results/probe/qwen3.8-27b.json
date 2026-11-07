@@ -1,0 +1,88 @@
+{
+ "id": "resp_B-QIprNr8XXUu6hc2zDFs0lRfjWkDJ55hoP8QqmOFSzpY6ZKXRgNBaUvAd2rilk9ZdunVbBIBYCwYGYxuhnqq6QKCb4IxRsnvm7tNME3-qKH149xaZtuWVW2-LHVG2pd9RGhQM4ZB1XW0tdhoR_pUP3b6uyPx5sE6WKjnszNlWhN207qqhMKVplBPCuN6JZip31WcOqLQQHnB7qKUobrcKQ_fCUnl2yp-BCgRkyxZNnQUUDFPqicaJIKR14Qbd1Y9RM-UYd8RxcYx3kGE-eNXlSpftPrrD4zJRHzWIutV0h8AtoBwJ8FISTHckLyb0r9aMf9O1D_fnxety4UdPVSMWsJVYkz5jWEUub5EsWPD7j8wDlG2mSmPUy4w5Qe_5M4B1qE2syqWnYLvhszSoDd3hvip2pNShQeDSwaNIPm82pmVMHivYRQVqYiBDlKKOWjcqvU1BuvpW1-hle3TX7dHOmxVbFpKk3suwWmsJx64HGMFAoAUyVFdWGoKp3NkXY2fRno3mO1tneDQrOMRDxw1vYtl80=",
+ "created_at": 1794074978,
+ "error": null,
+ "incomplete_details": null,
+ "instructions": null,
+ "metadata": null,
+ "model": "qwen3.8-27b",
+ "object": "response",
+ "output": [
+  {
+   "id": "rs_81763a2ef363eb27",
+   "summary": [],
+   "type": "reasoning",
+   "content": [
+    {
+     "text": "We need answer user's request. Need final JSON only {\"choice\": \"<colour>\"}. Choose one color from red green blue. Could pick blue. Ensure no extra.\n",
+     "type": "reasoning_text"
+    }
+   ]
+  },
+  {
+   "id": "msg_b3a256bab919300e",
+   "content": [
+    {
+     "annotations": [],
+     "text": "\n\n{\"choice\": \"blue\"}",
+     "type": "output_text",
+     "logprobs": null
+    }
+   ],
+   "role": "assistant",
+   "status": "completed",
+   "type": "message",
+   "phase": null
+  }
+ ],
+ "parallel_tool_calls": true,
+ "temperature": 1,
+ "tool_choice": "none",
+ "tools": [],
+ "top_p": 0.95,
+ "max_output_tokens": 60,
+ "previous_response_id": null,
+ "reasoning": null,
+ "status": "completed",
+ "text": null,
+ "truncation": "disabled",
+ "usage": {
+  "input_tokens": 80,
+  "input_tokens_details": {
+   "audio_tokens": null,
+   "cached_tokens": 0,
+   "cached_tokens_details": null,
+   "image_tokens": null,
+   "text_tokens": null,
+   "video_tokens": null,
+   "cache_write_tokens": 0,
+   "input_tokens_per_turn": [],
+   "cached_tokens_per_turn": []
+  },
+  "output_tokens": 44,
+  "output_tokens_details": {
+   "audio_tokens": null,
+   "reasoning_tokens": 35,
+   "text_tokens": null,
+   "tool_output_tokens": 0,
+   "output_tokens_per_turn": [],
+   "tool_output_tokens_per_turn": []
+  },
+  "total_tokens": 124,
+  "cost": 5.8120000000000006e-05
+ },
+ "user": null,
+ "store": false,
+ "background": false,
+ "max_tool_calls": null,
+ "prompt": null,
+ "service_tier": "auto",
+ "top_logprobs": null,
+ "presence_penalty": 0,
+ "frequency_penalty": 0,
+ "kv_transfer_params": null,
+ "ec_transfer_params": null,
+ "input_messages": null,
+ "output_messages": null,
+ "output_text": "\n\n{\"choice\": \"blue\"}"
+}

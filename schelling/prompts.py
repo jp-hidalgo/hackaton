@@ -12,8 +12,8 @@ import numpy as np
 # 7 Nov 12:20). COPY_MODEL plays both agents in the same-model cells; OTHER_MODEL
 # is the second family in the cross cells. Set after the --probe run, before any
 # grid call.
-COPY_MODEL = "gemma-4-31b-it"
-OTHER_MODEL = "deepseek-v4-flash"
+COPY_MODEL = "gemma-4-26b-a4b-it"   # cheapest Gemma that passed the probe (amendment 2)
+OTHER_MODEL = "deepseek-v4-flash"    # with reasoning effort "none" (amendment 2)
 GPT = COPY_MODEL      # legacy names kept so the condition table reads as in the prereg
 GEMINI = OTHER_MODEL
 TEMPERATURE = 1.0

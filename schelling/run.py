@@ -60,7 +60,11 @@ class Client:
 
     def respond(self, model: str, prompt: str, max_output_tokens: int = MAX_OUTPUT_TOKENS) -> dict:
         body = {"model": model, "input": prompt, "temperature": TEMPERATURE,
-                "max_output_tokens": max_output_tokens, "store": False}
+                "max_output_tokens": max_output_tokens, "store": False,
+                # Amendment 2: hidden reasoning off for every model, so each reply is
+                # a single forward pass to the JSON. Gemma reports 0 reasoning tokens
+                # either way; DeepSeek drops from ~26 to 0 with this.
+                "reasoning": {"effort": "none"}}
         r = self.http.post("/responses", json=body)
         r.raise_for_status()
         return r.json()

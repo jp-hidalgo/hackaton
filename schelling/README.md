@@ -24,7 +24,7 @@ pip install numpy httpx python-dotenv
 python -m unittest tests.test_schelling          # offline
 ```
 
-LLM runs go through the Adaption Responses API (sprint partner) and need `ADAPTION_API_KEY` in a `.env` file at the repository root. Models: `gemma-4-31b-it` for the copies, `deepseek-v4-flash` as the second family (PREREGISTRATION.md, amendment 1).
+LLM runs go through the Adaption Responses API (sprint partner) and need `ADAPTION_API_KEY` in a `.env` file at the repository root. Models: `gemma-4-26b-a4b-it` for the copies, `deepseek-v4-flash` (reasoning effort none) as the second family (PREREGISTRATION.md, amendments 1 and 2).
 
 ```
 python -m schelling.run --probe                   # throwaway prompt to candidate models, results/probe/

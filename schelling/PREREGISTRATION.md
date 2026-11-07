@@ -104,3 +104,17 @@ Change: calls go through the Adaption Responses API (`https://api.prod.adaptionl
 Selection rule, fixed now: a throwaway probe prompt (pick a colour from red, green, blue; not a grid menu) is sent once to each candidate hosted model. A model is eligible if it returns parseable JSON, reports zero reasoning tokens, and answers in under 20 s. `COPY_MODEL` is the cheapest eligible Gemma; `OTHER_MODEL` is the cheapest eligible model from a different family. If `deepseek-v4-flash` fails the probe, the fallback order is `qwen3.8-27b`, then `glm-53-flash`. Any substitution is recorded here with the probe output before the first grid call. The probe output is kept in `results/probe/`.
 
 Spend cap becomes 100 Adaption credits (of 1500), estimated from logged token usage at the documented credit prices. The `cost_usd` field in the records holds credits. Everything else (menus, prompts, conditions, n, metrics, predictions, exit bar) is unchanged. Predictions P1-P5 now refer to the new pair of models.
+
+### Amendment 2, Saturday 7 November 2026, 12:14 (UTC-6): probe result and final models
+
+Before any grid or solo call. Probe (`results/probe/`, throwaway colour prompt, one call each):
+
+| Model | Time | Output tokens | Reasoning tokens | Parsed |
+|---|---|---|---|---|
+| gemma-4-31b-it | 0.9 s | 12 | 0 | yes |
+| gemma-4-26b-a4b-it | 0.3 s | 12 | 0 | yes |
+| deepseek-v4-flash | 1.2 s | 33 | 26 | yes |
+| qwen3.8-27b | 0.8 s | 44 | 35 | yes |
+| glm-53-flash | 0.5 s | 55 | 47 | yes |
+
+Under the amendment 1 rule the cheapest eligible Gemma is `gemma-4-26b-a4b-it`, so `COPY_MODEL = gemma-4-26b-a4b-it` (not the 31b named provisionally above). No non-Gemma model passed the zero-reasoning criterion as-is. A second throwaway test on `deepseek-v4-flash` found that the request field `"reasoning": {"effort": "none"}` yields 0 reasoning tokens and clean JSON (`effort: minimal`, `enabled: false` and `thinking: disabled` did not). Rule applied: `OTHER_MODEL = deepseek-v4-flash` with `reasoning.effort = none` on every call, to both models, so each reply is a single pass to the JSON. The fallback chain was not needed. Smoke run follows; the grid starts only if the smoke pair and solo parse.
