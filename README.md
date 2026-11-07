@@ -1,8 +1,16 @@
+# November 2026: Schelling copies, no channel (Swarm Alignment Hackathon, Track 4)
+
+Current project, on branch `sprint/schelling-copies`: [schelling/README.md](schelling/README.md). Everything under `schelling/`, `tests/test_schelling.py`, `report-schelling/` and `submission-schelling/` was written during the Swarm Alignment Hackathon (6-8 November 2026). Pre-registration with timestamped amendments: [schelling/PREREGISTRATION.md](schelling/PREREGISTRATION.md). Report source: [report-schelling/report.md](report-schelling/report.md).
+
+Everything below this line is preexisting work from earlier sprints and is not part of the November submission.
+
+---
+
 # October 2026: pairwise net influence on LLM agents (collusion sprint, question 1.4)
 
-Current project, on branch `sprint/q1.4-net-influence`: [collusion/README.md](collusion/README.md). All code under `collusion/` and `tests/test_netinfluence.py` was written during the AI Collusion Research Sprint (23-25 October 2026). The report draft is [report-collusion/report.md](report-collusion/report.md).
+Preexisting (AI Collusion Research Sprint, 23-25 October 2026): [collusion/README.md](collusion/README.md). All code under `collusion/` and `tests/test_netinfluence.py`; report draft [report-collusion/report.md](report-collusion/report.md).
 
-Everything below this line is preexisting work from a different sprint in September 2026 and is not part of the October submission.
+Everything below this line is preexisting work from a different sprint in September 2026.
 
 ---
 
