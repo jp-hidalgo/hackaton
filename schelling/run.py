@@ -31,7 +31,8 @@ from schelling.prompts import (CONDITIONS, COPY_MODEL, MENUS, N_PAIRS, N_SOLO, O
 RESULTS = Path(__file__).resolve().parent / "results"
 BASE_URL = "https://api.prod.adaptionlabs.ai/api/v1"
 SPEND_CAP_CREDITS = 100.0   # of the 1500 available; expected spend is far below
-MAX_ATTEMPTS = 3
+MAX_ATTEMPTS = 3            # parse failures
+MAX_TRANSPORT_RETRIES = 6   # 429 / network (amendment 6)
 MAX_OUTPUT_TOKENS = 60
 
 # Adaption list prices, credits per million tokens (input, output), docs read 7 Nov 2026.
@@ -113,14 +114,21 @@ def one_call(client: Client, model: str, prompt: str, options: list[str],
     attempts = []
     choice = None
     usage = {"prompt": 0, "completion": 0, "reasoning": 0}
-    for attempt in range(MAX_ATTEMPTS):
+    parse_attempts = 0
+    transport_errors = 0
+    # Amendment 6: transport errors (429, network) are retried separately from
+    # parse failures, up to MAX_TRANSPORT_RETRIES with growing backoff, so a
+    # rate-limited call is not recorded as a model non-answer.
+    while parse_attempts < MAX_ATTEMPTS and transport_errors < MAX_TRANSPORT_RETRIES:
         try:
             resp = client.respond(model, prompt, max_output_tokens=max_output_tokens,
                                   temperature=temperature, reasoning=reasoning)
         except Exception as exc:  # rate limit or network: back off, retry
             attempts.append({"raw": f"ERROR {exc}"})
-            time.sleep(3 + 7 * attempt)
+            transport_errors += 1
+            time.sleep(min(60, 5 * 2 ** transport_errors))
             continue
+        parse_attempts += 1
         raw = output_text(resp)
         u = resp.get("usage") or {}
         usage["prompt"] += int(u.get("input_tokens", 0) or 0)
@@ -137,7 +145,20 @@ def one_call(client: Client, model: str, prompt: str, options: list[str],
             break
     return {"model": model, "prompt": prompt, "options": options, "attempts": attempts,
             "choice": choice, "usage": usage, "temperature": temperature, "reasoning": reasoning,
+            "no_response": parse_attempts == 0,   # every attempt was a transport error
             "cost_usd": cost_credits(model, usage["prompt"], usage["completion"])}
+
+
+def transport_failed(rec: dict) -> bool:
+    """A record where some agent never received a model response (all attempts
+    were transport errors). Older records lack `no_response`; infer it."""
+    agents = rec.get("agents") or [rec.get("agent")]
+    for a in agents:
+        if a.get("no_response"):
+            return True
+        if a["choice"] is None and all(at["raw"].startswith("ERROR") for at in a["attempts"]):
+            return True
+    return False
 
 
 def pair_jobs() -> list[dict]:
@@ -166,11 +187,18 @@ def job_key(j: dict) -> str:
 
 
 def load_records(results_dir: Path) -> list[dict]:
+    """All JSONL records in a directory. A line that does not parse (a torn write
+    from two appenders) is skipped and reported; the job is then simply redone
+    on the next resumable run."""
     records = []
     for path in sorted(results_dir.glob("*.jsonl")):
-        for line in path.read_text(encoding="utf-8").splitlines():
-            if line.strip():
+        for ln, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+            if not line.strip():
+                continue
+            try:
                 records.append(json.loads(line))
+            except json.JSONDecodeError:
+                print(f"skipping unparseable line {ln} in {path.name}")
     return records
 
 

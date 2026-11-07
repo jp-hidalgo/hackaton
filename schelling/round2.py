@@ -179,11 +179,49 @@ def run_solo(client: Client, job: dict) -> dict:
 
 
 def load_round2() -> list[dict]:
+    """All round 2 records, one per key. If a key was run more than once (two
+    worker sets overlapped on 7 Nov between 12:36 and 12:55, see amendment 5),
+    the record with the earliest `time` is kept and the rest are dropped; the
+    number dropped is printed."""
     recs = []
     if OUT.exists():
-        for sub in sorted(p for p in OUT.iterdir() if p.is_dir()):
+        for sub in sorted(p for p in OUT.iterdir() if p.is_dir() and not p.name.startswith("_")):
             recs += load_records(sub)
-    return recs
+    by_key: dict[str, dict] = {}
+    for r in sorted(recs, key=lambda r: r.get("time", "")):
+        by_key.setdefault(r["key"], r)
+    dropped = len(recs) - len(by_key)
+    if dropped:
+        print(f"load_round2: {dropped} duplicate records dropped (earliest kept)")
+    return list(by_key.values())
+
+
+def quarantine_transport_failures() -> int:
+    """Amendment 6: move every record in which some agent got no model response
+    (all attempts were HTTP 429 or network errors) to results/round2/_invalid_transport/,
+    which the loader ignores, so the normal resumable run redoes the whole job."""
+    from schelling.run import transport_failed
+    moved = 0
+    inv = OUT / "_invalid_transport"
+    inv.mkdir(parents=True, exist_ok=True)
+    for sub in sorted(p for p in OUT.iterdir() if p.is_dir() and not p.name.startswith("_")):
+        for path in sorted(sub.glob("*.jsonl")):
+            keep, drop = [], []
+            for line in path.read_text(encoding="utf-8").splitlines():
+                if not line.strip():
+                    continue
+                try:
+                    rec = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                (drop if transport_failed(rec) else keep).append(line)
+            if drop:
+                with (inv / f"{sub.name}__{path.name}").open("a", encoding="utf-8") as fh:
+                    fh.write("\n".join(drop) + "\n")
+                path.write_text("\n".join(keep) + ("\n" if keep else ""), encoding="utf-8")
+                moved += len(drop)
+    print(f"quarantined {moved} transport-failed records")
+    return moved
 
 
 def main() -> None:
@@ -191,8 +229,13 @@ def main() -> None:
     ap.add_argument("--worker", type=int, default=0)
     ap.add_argument("--workers", type=int, default=1)
     ap.add_argument("--block", default="ABCDE", help="letters of the blocks to run, in order")
+    ap.add_argument("--quarantine-transport", action="store_true",
+                    help="amendment 6: move records with no model response aside, then exit")
     args = ap.parse_args()
 
+    if args.quarantine_transport:
+        quarantine_transport_failures()
+        return
     client = Client()
     existing = load_round2()
     done = {r["key"] for r in existing}
@@ -210,7 +253,8 @@ def main() -> None:
             block_dir = OUT / j["block"]
             if j["block"] not in handles:
                 block_dir.mkdir(parents=True, exist_ok=True)
-                handles[j["block"]] = (block_dir / f"records_w{args.worker}.jsonl").open("a", encoding="utf-8")
+                # file name carries the block set so two worker sets never share a file
+                handles[j["block"]] = (block_dir / f"records_{args.block}_w{args.worker}.jsonl").open("a", encoding="utf-8")
             rec = run_pair(client, j) if j["kind"] == "pair2" else run_solo(client, j)
             spent += rec["cost_usd"]
             fh = handles[j["block"]]
